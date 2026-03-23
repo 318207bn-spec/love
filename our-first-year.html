@@ -878,20 +878,8 @@ function toggleSound(){AM.toggleMute();}
 const ME = (() => {
   const SCENE_MEDIA = {
     0:  { type:'slideshow', speed:2800, mode:'normal',  imgs:['mem_01.jpg'] },
-    1:  { type:'slideshow', speed:2600, mode:'normal',  imgs:['mem_04.jpg','mem_05.jpg','mem_06.jpg'] },
-    2:  { type:'slideshow', speed:2500, mode:'normal',  imgs:['mem_07.jpg','mem_08.jpg','mem_09.jpg'] },
-    3:  { type:'video',     mode:'normal', src:'Scene 3.MOV' },
-    4:  { type:'video',     mode:'normal', src:'Scene 3.MOV' },
-    6:  { type:'slideshow', speed:3000, mode:'normal',  imgs:['mem_10.jpg','mem_11.jpg','mem_12.jpg'] },
-    7:  { type:'slideshow', speed:2400, mode:'normal',  imgs:['mem_13.jpg','mem_14.jpg','mem_15.jpg'] },
-    8:  { type:'slideshow', speed:2200, mode:'normal',  imgs:['mem_16.jpg','mem_17.jpg','mem_18.jpg'] },
-    9:  { type:'slideshow', speed:2000, mode:'normal',  imgs:['mem_19.jpg','mem_20.jpg','mem_21.jpg'] },
-    10: { type:'slideshow', speed:700,  mode:'montage', imgs:['mem_22.jpg','mem_23.jpg','mem_24.jpg','mem_25.jpg','mem_26.jpg'] },
-    11: { type:'slideshow', speed:650,  mode:'montage', imgs:['mem_27.jpg','mem_28.jpg','mem_29.jpg','mem_30.jpg','mem_31.jpg'] },
-    12: { type:'slideshow', speed:700,  mode:'montage', imgs:['mem_32.jpg','mem_33.jpg','mem_34.jpg','mem_35.jpg'] },
-    13: { type:'slideshow', speed:5000, mode:'ending',  imgs:['mem_end1.jpg','mem_end2.jpg'] },
-    14: { type:'slideshow', speed:6000, mode:'ending',  imgs:['mem_end3.jpg'] },
-    15: { type:'slideshow', speed:7000, mode:'ending',  imgs:['mem_end4.jpg'] },
+    3:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
+    4:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
   };
   let slotActive='A', slideshowTimer=null, slideIndex=0, currentVideo=null;
   const preloaded={};
