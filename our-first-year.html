@@ -876,11 +876,12 @@ function toggleSound(){AM.toggleMute();}
 // MEDIA ENGINE — declared BEFORE scene engine
 // ══════════════════════════════════════════════
 const ME = (() => {
-  const SCENE_MEDIA = {
-    0:  { type:'slideshow', speed:2800, mode:'normal',  imgs:['mem_01.jpg'] },
-    3:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
-    4:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
-  };
+const SCENE_MEDIA = {
+  0: { type:'slideshow', speed:2800, mode:'normal',
+       imgs:['https://318207bn-spec.github.io/love/mem_01.jpg'] },
+  3: { type:'video', mode:'normal', src:'Scene 3.MOV' },
+  4: { type:'video', mode:'normal', src:'Scene 3.MOV' },
+};
   let slotActive='A', slideshowTimer=null, slideIndex=0, currentVideo=null;
   const preloaded={};
   function slotEl(n){ return document.getElementById('slot'+n); }
