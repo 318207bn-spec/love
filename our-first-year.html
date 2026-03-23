@@ -410,7 +410,12 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
   <div class="box">
     <p class="s2-date-display">30 มกราคม 2568</p>
     <h2 class="t-title grad-pink" style="margin-bottom:6px">วันแรกที่เจอ Piing</h2>
-    <p class="t-caption" style="color:rgba(255,255,255,0.4);margin-bottom:20px">วันที่เค้ากล้าพอจะเปิดใจให้ใหม่</p>
+    <p class="t-caption" style="color:rgba(255,255,255,0.4);margin-bottom:14px">วันที่เค้ากล้าพอจะเปิดใจให้ใหม่</p>
+    <!-- Photo slideshow inline -->
+    <div id="s2Photos" style="width:100%;max-width:340px;margin:0 auto 16px;border-radius:18px;overflow:hidden;position:relative;aspect-ratio:4/3;box-shadow:0 8px 32px rgba(0,0,0,0.6)">
+      <img id="s2Img" src="" alt="" style="width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.8s ease;animation:mediaZoom 6s ease-in-out forwards;filter:brightness(0.9) contrast(1.05)">
+      <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,rgba(0,0,0,0.4))"></div>
+    </div>
     <div class="s2-card" onclick="tapCard(this)">
       <span class="s2-card-emoji">🌸</span>
       <div class="t-caption" style="color:rgba(255,255,255,0.7)">วันนั้นเค้าตัดสินใจไปเจอผู้หญิงคนหนึ่ง</div>
@@ -863,6 +868,7 @@ function toggleSound(){AM.toggleMute();}
 // ══════════════════════════════════════════════
 const ME = (() => {
   const SCENE_MEDIA = {
+    0:  { type:'slideshow', speed:2800, mode:'normal', imgs:['mem_01.jpg'] },
     2:  { type:'slideshow', speed:2500, mode:'normal', imgs:['1.jpg','2.jpg','3.jpg'] },
     3:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
     4:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
@@ -937,6 +943,7 @@ function goTo(n,cinematic=false){
   updateProgress(n);
   AM.handleScene(n);
   const doSwitch=()=>{
+    if(cur===2&&_s2Timer){clearTimeout(_s2Timer);_s2Timer=null;}
     if(cur===3){const v=document.getElementById('s3Video');if(v){v.pause();v.classList.remove('visible');}}
     document.getElementById(sid(cur))?.classList.remove('active');
     cur=n;
@@ -1010,7 +1017,31 @@ function initCanvas(n){
 initCanvas(0);
 
 function initS1(){document.querySelectorAll('.s1-line').forEach(el=>{el.style.opacity='0';el.style.animation=el.style.animation||'none';void el.offsetWidth;el.style.animation='';});}
-function initS2(){}
+
+let _s2Timer=null;
+function initS2(){
+  const imgs=['1.jpg','2.jpg','3.jpg'];
+  const el=document.getElementById('s2Img');
+  if(!el)return;
+  if(_s2Timer){clearTimeout(_s2Timer);_s2Timer=null;}
+  let idx=0;
+  const show=()=>{
+    el.style.opacity='0';
+    setTimeout(()=>{
+      el.src=imgs[idx%imgs.length];
+      el.style.animation='none';void el.offsetWidth;
+      el.style.animation='mediaZoom 6s ease-in-out forwards';
+      el.style.opacity='1';
+      idx++;
+      _s2Timer=setTimeout(show,2500);
+    },400);
+  };
+  el.src=imgs[0];
+  el.style.opacity='1';
+  el.style.animation='mediaZoom 6s ease-in-out forwards';
+  idx=1;
+  _s2Timer=setTimeout(show,2500);
+}
 function tapCard(el){el.classList.toggle('tapped');vibrate(15);}
 
 function initS3(){
