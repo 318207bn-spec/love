@@ -873,6 +873,82 @@ function handleFirstUnlock(){AM.unlock();}
 function toggleSound(){AM.toggleMute();}
 
 // ══════════════════════════════════════════════
+// MEDIA ENGINE — declared BEFORE scene engine
+// ══════════════════════════════════════════════
+const ME = (() => {
+  const SCENE_MEDIA = {
+    0:  { type:'slideshow', speed:2800, mode:'normal',  imgs:['mem_01.jpg','mem_02.jpg','mem_03.jpg'] },
+    1:  { type:'slideshow', speed:2600, mode:'normal',  imgs:['mem_04.jpg','mem_05.jpg','mem_06.jpg'] },
+    2:  { type:'slideshow', speed:2500, mode:'normal',  imgs:['mem_07.jpg','mem_08.jpg','mem_09.jpg'] },
+    3:  { type:'video',     mode:'normal', src:'Scene 3.MOV' },
+    4:  { type:'video',     mode:'normal', src:'Scene 3.MOV' },
+    6:  { type:'slideshow', speed:3000, mode:'normal',  imgs:['mem_10.jpg','mem_11.jpg','mem_12.jpg'] },
+    7:  { type:'slideshow', speed:2400, mode:'normal',  imgs:['mem_13.jpg','mem_14.jpg','mem_15.jpg'] },
+    8:  { type:'slideshow', speed:2200, mode:'normal',  imgs:['mem_16.jpg','mem_17.jpg','mem_18.jpg'] },
+    9:  { type:'slideshow', speed:2000, mode:'normal',  imgs:['mem_19.jpg','mem_20.jpg','mem_21.jpg'] },
+    10: { type:'slideshow', speed:700,  mode:'montage', imgs:['mem_22.jpg','mem_23.jpg','mem_24.jpg','mem_25.jpg','mem_26.jpg'] },
+    11: { type:'slideshow', speed:650,  mode:'montage', imgs:['mem_27.jpg','mem_28.jpg','mem_29.jpg','mem_30.jpg','mem_31.jpg'] },
+    12: { type:'slideshow', speed:700,  mode:'montage', imgs:['mem_32.jpg','mem_33.jpg','mem_34.jpg','mem_35.jpg'] },
+    13: { type:'slideshow', speed:5000, mode:'ending',  imgs:['mem_end1.jpg','mem_end2.jpg'] },
+    14: { type:'slideshow', speed:6000, mode:'ending',  imgs:['mem_end3.jpg'] },
+    15: { type:'slideshow', speed:7000, mode:'ending',  imgs:['mem_end4.jpg'] },
+  };
+  let slotActive='A', slideshowTimer=null, slideIndex=0, currentVideo=null;
+  const preloaded={};
+  function slotEl(n){ return document.getElementById('slot'+n); }
+  function inactiveSlot(){ return slotActive==='A'?'B':'A'; }
+  function preloadAll(){
+    Object.values(SCENE_MEDIA).forEach(cfg=>{
+      if(cfg.type==='slideshow'&&cfg.imgs)
+        cfg.imgs.forEach(src=>{ if(!preloaded[src]){const i=new Image();i.src=src;preloaded[src]=i;} });
+    });
+  }
+  function makeVideo(src){
+    const v=document.createElement('video');
+    v.src=src;v.muted=true;v.playsInline=true;v.autoplay=false;v.loop=true;
+    v.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.68) contrast(1.05)';
+    return v;
+  }
+  function showImg(src,mode,instant){
+    const next=inactiveSlot(),nextEl=slotEl(next);
+    nextEl.innerHTML='';nextEl.className='media-slot'+(mode?' '+mode:'');
+    const img=document.createElement('img');img.src=src;img.alt='';img.draggable=false;
+    nextEl.appendChild(img);
+    const prevEl=slotEl(slotActive);
+    if(instant){prevEl.classList.remove('active');nextEl.classList.add('active');slotActive=next;}
+    else{nextEl.classList.add('active');prevEl.classList.remove('active');slotActive=next;setTimeout(()=>{prevEl.innerHTML='';prevEl.className='media-slot';},900);}
+  }
+  function startSlideshow(cfg){
+    stopAll();if(!cfg.imgs||!cfg.imgs.length)return;slideIndex=0;
+    const show=()=>{showImg(cfg.imgs[slideIndex%cfg.imgs.length],cfg.mode,slideIndex===0);slideIndex++;slideshowTimer=setTimeout(show,cfg.speed);};
+    show();
+  }
+  function startVideo(cfg){
+    stopAll();const next=inactiveSlot(),nextEl=slotEl(next);
+    nextEl.innerHTML='';nextEl.className='media-slot '+(cfg.mode||'normal');
+    const v=makeVideo(cfg.src);nextEl.appendChild(v);
+    const prevEl=slotEl(slotActive);
+    nextEl.classList.add('active');prevEl.classList.remove('active');slotActive=next;
+    setTimeout(()=>{prevEl.innerHTML='';prevEl.className='media-slot';},900);
+    v.play().catch(()=>{});currentVideo=v;
+  }
+  function stopAll(){
+    if(slideshowTimer){clearTimeout(slideshowTimer);slideshowTimer=null;}
+    if(currentVideo){try{currentVideo.pause();currentVideo.currentTime=0;}catch(e){}currentVideo=null;}
+    slideIndex=0;
+  }
+  function clearSlots(){
+    stopAll();['A','B'].forEach(n=>{const el=slotEl(n);if(el){el.classList.remove('active');el.innerHTML='';el.className='media-slot';}});slotActive='A';
+  }
+  return {
+    init(){ preloadAll(); },
+    enterScene(n){ const cfg=SCENE_MEDIA[n]; if(!cfg){clearSlots();return;} if(cfg.type==='slideshow')startSlideshow(cfg); else if(cfg.type==='video')startVideo(cfg); },
+    leaveScene(){ if(currentVideo){try{currentVideo.pause();currentVideo.currentTime=0;}catch(e){}} },
+    stop(){ clearSlots(); }
+  };
+})();
+
+// ══════════════════════════════════════════════
 // SCENE ENGINE
 // ══════════════════════════════════════════════
 let cur=0;
@@ -1082,6 +1158,7 @@ window.addEventListener('resize',()=>{
 
 updateProgress(0);
 document.getElementById('sceneCounter').textContent='1 / '+TOTAL;
+ME.init();
 ME.enterScene(0);
 
 const COUPLE_DATE=new Date('2025-04-19T00:00:00');
@@ -1144,186 +1221,8 @@ document.addEventListener('keydown',e=>{
   if(_kb.includes('piing')){_kb='';openSecretLetter();}
 });
 
-// ══════════════════════════════════════════════
-// MEDIA ENGINE — cinematic photo/video system
-// ══════════════════════════════════════════════
-const ME = (() => {
-  // ── Scene media config ──────────────────────
-  // Replace placeholder filenames with your actual files
-  // Images: put files in same folder as index.html
-  // Speeds: 'slow'=2500ms, 'normal'=2000ms, 'fast'=700ms
-  const SCENE_MEDIA = {
-    0: { type:'slideshow', speed:2800, mode:'normal',
-         imgs:['mem_01.jpg','mem_02.jpg','mem_03.jpg'] },
-    1: { type:'slideshow', speed:2600, mode:'normal',
-         imgs:['mem_04.jpg','mem_05.jpg','mem_06.jpg'] },
-    2: { type:'slideshow', speed:2500, mode:'normal',
-         imgs:['mem_07.jpg','mem_08.jpg','mem_09.jpg'] },
-    3: { type:'video', mode:'normal',
-         src:'Scene 3.MOV' },
-    4: { type:'video', mode:'normal',
-         src:'Scene 3.MOV' },
-    // 5: no media — rain only
-    6: { type:'slideshow', speed:3000, mode:'normal',
-         imgs:['mem_10.jpg','mem_11.jpg','mem_12.jpg'] },
-    7: { type:'slideshow', speed:2400, mode:'normal',
-         imgs:['mem_13.jpg','mem_14.jpg','mem_15.jpg'] },
-    8: { type:'slideshow', speed:2200, mode:'normal',
-         imgs:['mem_16.jpg','mem_17.jpg','mem_18.jpg'] },
-    9: { type:'slideshow', speed:2000, mode:'normal',
-         imgs:['mem_19.jpg','mem_20.jpg','mem_21.jpg'] },
-    10: { type:'slideshow', speed:700, mode:'montage',
-          imgs:['mem_22.jpg','mem_23.jpg','mem_24.jpg','mem_25.jpg','mem_26.jpg'] },
-    11: { type:'slideshow', speed:650, mode:'montage',
-          imgs:['mem_27.jpg','mem_28.jpg','mem_29.jpg','mem_30.jpg','mem_31.jpg'] },
-    12: { type:'slideshow', speed:700, mode:'montage',
-          imgs:['mem_32.jpg','mem_33.jpg','mem_34.jpg','mem_35.jpg'] },
-    13: { type:'slideshow', speed:5000, mode:'ending',
-          imgs:['mem_end1.jpg','mem_end2.jpg'] },
-    14: { type:'slideshow', speed:6000, mode:'ending',
-          imgs:['mem_end3.jpg'] },
-    15: { type:'slideshow', speed:7000, mode:'ending',
-          imgs:['mem_end4.jpg'] },
-  };
+// Initialise ME on load — already called above
 
-  let slotActive = 'A'; // which slot is showing
-  let slideshowTimer = null;
-  let slideIndex = 0;
-  let currentScene = -1;
-  let currentVideo = null;
-  const preloaded = {}; // cache
-
-  function slotEl(name){ return document.getElementById('slot'+name); }
-  function inactiveSlot(){ return slotActive==='A'?'B':'A'; }
-
-  // Preload all images eagerly on page load
-  function preloadAll(){
-    Object.values(SCENE_MEDIA).forEach(cfg=>{
-      if(cfg.type==='slideshow' && cfg.imgs){
-        cfg.imgs.forEach(src=>{
-          if(preloaded[src])return;
-          const img=new Image();img.src=src;preloaded[src]=img;
-        });
-      }
-    });
-  }
-
-  // Build an img element with correct classes
-  function makeImg(src, mode){
-    const img=document.createElement('img');
-    img.src=src;img.alt='';img.draggable=false;
-    return img;
-  }
-
-  // Build a video element
-  function makeVideo(src){
-    const v=document.createElement('video');
-    v.src=src;v.muted=true;v.playsInline=true;v.autoplay=false;v.loop=true;
-    v.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.68) contrast(1.05)';
-    return v;
-  }
-
-  // Show a single image in the inactive slot, then swap
-  function showImg(src, mode, instant){
-    const next = inactiveSlot();
-    const nextEl = slotEl(next);
-    nextEl.innerHTML='';
-    nextEl.className='media-slot'+(mode?' '+mode:'');
-
-    const img = makeImg(src, mode);
-    // Reset zoom by recreating element
-    nextEl.appendChild(img);
-
-    if(instant){
-      // Hard swap
-      slotEl(slotActive).classList.remove('active');
-      nextEl.classList.add('active');
-      slotActive = next;
-    } else {
-      // Crossfade
-      const prev = slotActive;
-      const prevEl = slotEl(prev);
-      nextEl.classList.add('active');
-      prevEl.classList.remove('active');
-      slotActive = next;
-      // cleanup old slot after transition
-      setTimeout(()=>{ prevEl.innerHTML=''; prevEl.className='media-slot'; }, 900);
-    }
-  }
-
-  // Start / restart slideshow for a scene
-  function startSlideshow(cfg){
-    stopAll();
-    if(!cfg.imgs||!cfg.imgs.length)return;
-    slideIndex=0;
-    const show=()=>{
-      const src=cfg.imgs[slideIndex % cfg.imgs.length];
-      showImg(src, cfg.mode, slideIndex===0);
-      slideIndex++;
-      slideshowTimer=setTimeout(show, cfg.speed);
-    };
-    show();
-  }
-
-  // Start video for a scene
-  function startVideo(cfg){
-    stopAll();
-    const next=inactiveSlot();
-    const nextEl=slotEl(next);
-    nextEl.innerHTML='';nextEl.className='media-slot '+cfg.mode;
-    const v=makeVideo(cfg.src);
-    nextEl.appendChild(v);
-    // Fade in
-    const prevEl=slotEl(slotActive);
-    nextEl.classList.add('active');
-    prevEl.classList.remove('active');
-    slotActive=next;
-    setTimeout(()=>{ prevEl.innerHTML='';prevEl.className='media-slot'; },900);
-    v.play().catch(()=>{});
-    currentVideo=v;
-  }
-
-  // Stop everything
-  function stopAll(){
-    if(slideshowTimer){clearTimeout(slideshowTimer);slideshowTimer=null;}
-    if(currentVideo){try{currentVideo.pause();currentVideo.currentTime=0;}catch(e){}currentVideo=null;}
-    slideIndex=0;
-  }
-
-  // Clear both slots
-  function clearSlots(){
-    stopAll();
-    ['A','B'].forEach(n=>{
-      const el=slotEl(n);
-      el.classList.remove('active');
-      el.innerHTML='';
-      el.className='media-slot';
-    });
-    slotActive='A';
-  }
-
-  return {
-    init(){ preloadAll(); },
-
-    enterScene(n){
-      currentScene=n;
-      const cfg=SCENE_MEDIA[n];
-      if(!cfg){ clearSlots(); return; }
-      if(cfg.type==='slideshow') startSlideshow(cfg);
-      else if(cfg.type==='video') startVideo(cfg);
-    },
-
-    leaveScene(n){
-      // Pause video immediately when leaving
-      if(currentVideo){try{currentVideo.pause();currentVideo.currentTime=0;}catch(e){}}
-    },
-
-    stop(){ clearSlots(); }
-  };
-})();
-
-// Initialise on load
-ME.init();
 </script>
 </body>
 </html>
