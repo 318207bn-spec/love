@@ -1633,364 +1633,384 @@ canvas.bg-canvas { position:absolute; inset:0; z-index:0; }
 
 <script>
 /* ════════════════════════════════════════════════════════════
-   NEW MUSIC SYSTEM START — Web Audio API 4 Tracks
-   T0 track0.mp3  30–65s  vol:0.16  Scene 0–5
-   T1 track1.mp3  70–105s vol:0.18  Scene 13–16
-   T2 track2.mp3  31–65s  vol:0.14  Scene 6
-   T3 track3.mp3  55–90s  vol:0.22  Scene 7–12
+   NEW MUSIC SYSTEM START — AudioManager (Production Grade)
    ════════════════════════════════════════════════════════════ */
 
-const MUSIC = {
-  tracks: [
-    { src:'track0.webm', start:30, end:65,  vol:0.16 },
-    { src:'track1.webm', start:70, end:105, vol:0.18 },
-    { src:'track2.webm', start:31, end:65,  vol:0.14 },
-    { src:'track3.webm', start:55, end:90,  vol:0.22 },
-  ],
-  cur:      -1,
-  muted:    false,
-  unlocked: false,
-  ctx:      null,
-  buffers:  [null,null,null,null],
-  sources:  [null,null,null,null],
-  gains:    [null,null,null,null],
-  master:   null,
-  rainGain: null,
-  rainNode: null,
-  rainActive: false,
-  _rainFlucTimer: null,
-  _thunderTimer:  null,
-  _restartTimers: [null,null,null,null],
-};
-
-/* ════ Load audio buffer ════ */
-function loadTrack(idx, src) {
-  fetch(src)
-    .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
-    .then(buf => MUSIC.ctx.decodeAudioData(buf))
-    .then(decoded => { MUSIC.buffers[idx] = decoded; })
-    .catch(e => console.warn('Track load failed:', src, e));
-}
-
-/* ════ Play one slot (no loop — plays once then pauses) ════ */
-function playSlot(idx, vol, fadeMs, onEnded) {
-  if (!MUSIC.buffers[idx] || !MUSIC.ctx) return;
-  stopSlot(idx, 0);
-
-  const tr  = MUSIC.tracks[idx];
-  const dur = tr.end - tr.start;
-  const src = MUSIC.ctx.createBufferSource();
-  src.buffer = MUSIC.buffers[idx];
-  src.loop   = false;
-  src.connect(MUSIC.gains[idx]);
-  src.start(0, tr.start, dur);
-  MUSIC.sources[idx] = src;
-
-  // Fade in
-  const g = MUSIC.gains[idx];
-  g.gain.cancelScheduledValues(MUSIC.ctx.currentTime);
-  g.gain.setValueAtTime(0, MUSIC.ctx.currentTime);
-  g.gain.linearRampToValueAtTime(vol, MUSIC.ctx.currentTime + (fadeMs||1500)/1000);
-
-  // Fade out near end
-  const fadeOutAt = MUSIC.ctx.currentTime + dur - 2;
-  if (fadeOutAt > MUSIC.ctx.currentTime + (fadeMs||1500)/1000) {
-    g.gain.setValueAtTime(vol, fadeOutAt);
-    g.gain.linearRampToValueAtTime(0, MUSIC.ctx.currentTime + dur);
+class AudioManager {
+  constructor() {
+    this.ctx          = null;
+    this.masterGain   = null;
+    this.rainGain     = null;
+    this.buffers      = {};
+    this.currentSource = null;
+    this.currentGain   = null;
+    this.currentTrackId = null;
+    this.state        = 'idle'; // idle | playing | transitioning
+    this.rainSource   = null;
+    this.rainActive   = false;
+    this._rainFlucTimer  = null;
+    this._thunderTimer   = null;
+    this._tracks = {
+      0: { src: 'track0.webm', start: 30,  end: 65,  vol: 0.16 },
+      1: { src: 'track1.webm', start: 70,  end: 105, vol: 0.18 },
+      2: { src: 'track2.webm', start: 31,  end: 65,  vol: 0.14 },
+      3: { src: 'track3.webm', start: 55,  end: 90,  vol: 0.22 },
+    };
   }
 
-  src.onended = () => {
-    MUSIC.sources[idx] = null;
-    if (onEnded) onEnded();
-  };
-}
+  /* ── Init AudioContext inside user gesture ── */
+  init() {
+    if (this.ctx) return;
+    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
 
-/* ════ Play with auto-restart after gap ════ */
-function playWithGap(idx, vol, fadeMs) {
-  if (MUSIC.muted || !MUSIC.unlocked) return;
-  playSlot(idx, vol, fadeMs, () => {
-    if (MUSIC.cur !== idx || MUSIC.muted) return;
-    const gap = 5000 + Math.random() * 3000;
-    MUSIC._restartTimers[idx] = setTimeout(() => {
-      if (MUSIC.cur === idx && !MUSIC.muted) playWithGap(idx, vol, fadeMs);
-    }, gap);
-  });
-}
+    this.masterGain = this.ctx.createGain();
+    this.masterGain.gain.value = 1;
+    this.masterGain.connect(this.ctx.destination);
 
-/* ════ Stop a slot ════ */
-function stopSlot(idx, fadeMs) {
-  clearTimeout(MUSIC._restartTimers[idx]);
-  MUSIC._restartTimers[idx] = null;
-  const g = MUSIC.gains[idx];
-  if (!g || !MUSIC.ctx) return;
-  const ms = (fadeMs === undefined) ? 2000 : fadeMs;
-  if (ms > 0) {
-    g.gain.cancelScheduledValues(MUSIC.ctx.currentTime);
-    g.gain.setValueAtTime(g.gain.value, MUSIC.ctx.currentTime);
-    g.gain.linearRampToValueAtTime(0, MUSIC.ctx.currentTime + ms/1000);
-  } else {
-    g.gain.setValueAtTime(0, MUSIC.ctx.currentTime);
-  }
-  const src = MUSIC.sources[idx];
-  if (src) {
-    try { src.stop(MUSIC.ctx.currentTime + ms/1000 + 0.05); } catch(e){}
-    MUSIC.sources[idx] = null;
-  }
-}
-
-/* ════ Stop all slots ════ */
-function stopAll(fadeMs) {
-  for (let i = 0; i < 4; i++) stopSlot(i, fadeMs);
-}
-
-/* ════ Crossfade ════ */
-function crossfadeTo(toIdx, vol, fadeMs) {
-  const ms = fadeMs || 2500;
-  for (let i = 0; i < 4; i++) {
-    if (i !== toIdx && (MUSIC.sources[i] || MUSIC.gains[i].gain.value > 0)) {
-      stopSlot(i, ms);
-    }
-  }
-  if (MUSIC.cur !== toIdx) {
-    setTimeout(() => {
-      if (MUSIC.cur === toIdx && !MUSIC.muted) playWithGap(toIdx, vol, 1500);
-    }, 300);
-  }
-  MUSIC.cur = toIdx;
-  showMusicIndicator(toIdx);
-}
-
-/* ════ Rain System ════ */
-function startRain(fadeMs) {
-  if (MUSIC.rainActive || !MUSIC.ctx) return;
-  MUSIC.rainActive = true;
-  const ctx = MUSIC.ctx;
-
-  const bufLen  = ctx.sampleRate * 3;
-  const noiseBuf = ctx.createBuffer(2, bufLen, ctx.sampleRate);
-  for (let ch = 0; ch < 2; ch++) {
-    const d = noiseBuf.getChannelData(ch);
-    for (let i = 0; i < bufLen; i++) d[i] = Math.random()*2 - 1;
-  }
-  const noise = ctx.createBufferSource();
-  noise.buffer = noiseBuf;
-  noise.loop   = true;
-
-  const filter = ctx.createBiquadFilter();
-  filter.type  = 'lowpass';
-  filter.frequency.value = 1500;
-  filter.Q.value = 0.7;
-
-  const panner = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
-  noise.connect(filter);
-  if (panner) { filter.connect(panner); panner.connect(MUSIC.rainGain); }
-  else          { filter.connect(MUSIC.rainGain); }
-
-  noise.start();
-  MUSIC.rainNode = noise;
-
-  // Fade in
-  MUSIC.rainGain.gain.cancelScheduledValues(ctx.currentTime);
-  MUSIC.rainGain.gain.setValueAtTime(0, ctx.currentTime);
-  MUSIC.rainGain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + (fadeMs||1500)/1000);
-
-  // Random gain fluctuation
-  function fluctuate() {
-    if (!MUSIC.rainActive) return;
-    const v = 0.08 + Math.random()*0.04;
-    const t = 0.2  + Math.random()*0.3;
-    MUSIC.rainGain.gain.setTargetAtTime(v, ctx.currentTime, t*0.3);
-    if (panner) panner.pan.setTargetAtTime((Math.random()-0.5)*0.25, ctx.currentTime, 0.4);
-    MUSIC._rainFlucTimer = setTimeout(fluctuate, t*1000);
-  }
-  MUSIC._rainFlucTimer = setTimeout(fluctuate, 400);
-
-  // Thunder
-  function thunder() {
-    if (!MUSIC.rainActive) return;
-    const delay = 12000 + Math.random()*10000;
-    MUSIC._thunderTimer = setTimeout(() => {
-      if (!MUSIC.rainActive) return;
-      const tBuf = ctx.createBuffer(1, ctx.sampleRate*1.5, ctx.sampleRate);
-      const td   = tBuf.getChannelData(0);
-      for (let i=0;i<td.length;i++) td[i]=(Math.random()*2-1)*Math.pow(1-i/td.length,1.5)*0.25;
-      const tSrc = ctx.createBufferSource(); tSrc.buffer = tBuf;
-      const tGain = ctx.createGain();        tGain.gain.value = 0.1;
-      const tFil  = ctx.createBiquadFilter(); tFil.type='lowpass'; tFil.frequency.value=280;
-      tSrc.connect(tFil); tFil.connect(tGain); tGain.connect(MUSIC.master);
-      tSrc.start();
-      thunder();
-    }, delay);
-  }
-  thunder();
-}
-
-function stopRain(fadeMs) {
-  if (!MUSIC.rainActive) return;
-  MUSIC.rainActive = false;
-  clearTimeout(MUSIC._rainFlucTimer);
-  clearTimeout(MUSIC._thunderTimer);
-  const ms  = fadeMs || 1500;
-  const ctx = MUSIC.ctx;
-  MUSIC.rainGain.gain.cancelScheduledValues(ctx.currentTime);
-  MUSIC.rainGain.gain.setValueAtTime(MUSIC.rainGain.gain.value, ctx.currentTime);
-  MUSIC.rainGain.gain.linearRampToValueAtTime(0, ctx.currentTime + ms/1000);
-  if (MUSIC.rainNode) {
-    try { MUSIC.rainNode.stop(ctx.currentTime + ms/1000 + 0.1); } catch(e){}
-    MUSIC.rainNode = null;
-  }
-}
-
-/* ════ Scene Handler ════ */
-function handleMusicForScene(toScene, fromScene) {
-  if (!MUSIC.unlocked) return;
-
-  // Scene 0–5: Track 0
-  if (toScene >= 0 && toScene <= 5) {
-    stopRain(1500);
-    if (MUSIC.cur !== 0) crossfadeTo(0, 0.16, 2500);
-    return;
+    this.rainGain = this.ctx.createGain();
+    this.rainGain.gain.value = 0;
+    this.rainGain.connect(this.masterGain);
   }
 
-  // Scene 6: rain first then Track 2 (one shot)
-  if (toScene === 6) {
-    stopAll(2000);
-    // Rain starts 0.5s before music
-    startRain(1500);
-    setTimeout(() => {
-      if (MUSIC.muted) return;
-      MUSIC.cur = 2;
-      // Play once, no restart
-      playSlot(2, 0.14, 1500, () => {
-        // After music ends, only rain remains
-        MUSIC.cur = -1;
-      });
-      showMusicIndicator(2);
-    }, 500);
-    return;
+  /* ── Preload all buffers ── */
+  loadTracks() {
+    return Promise.all(
+      Object.entries(this._tracks).map(([id, tr]) =>
+        fetch(tr.src)
+          .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+          .then(buf => this.ctx.decodeAudioData(buf))
+          .then(decoded => { this.buffers[id] = decoded; })
+          .catch(e => console.warn(`[AudioManager] Failed to load ${tr.src}:`, e))
+      )
+    );
   }
 
-  // Scene 7–12: Track 3, fade out rain
-  if (toScene >= 7 && toScene <= 12) {
-    stopRain(2000);
-    if (MUSIC.cur !== 3) crossfadeTo(3, 0.22, 2500);
-    return;
+  /* ── Internal: ramp gain ── */
+  _ramp(gainNode, from, to, durationSec) {
+    const now = this.ctx.currentTime;
+    gainNode.gain.cancelScheduledValues(now);
+    gainNode.gain.setValueAtTime(from, now);
+    gainNode.gain.linearRampToValueAtTime(to, now + durationSec);
   }
 
-  // Scene 13–16: Track 1, gradual volume decrease + longer fade
-  if (toScene >= 13) {
-    stopRain(1500);
-    if (MUSIC.cur !== 1) {
-      crossfadeTo(1, 0.18, 3000);
-      // Gradually reduce volume toward end
-      if (MUSIC.ctx) {
-        const startVol = 0.18;
-        const endVol   = 0.08;
-        MUSIC.gains[1].gain.cancelScheduledValues(MUSIC.ctx.currentTime + 4);
-        MUSIC.gains[1].gain.linearRampToValueAtTime(endVol, MUSIC.ctx.currentTime + 25);
+  /* ── Play a track once ── */
+  play(trackId, fadeInSec = 1.5) {
+    if (!this.ctx || !this.buffers[trackId]) return;
+    if (this.currentTrackId === trackId && this.state === 'playing') return;
+
+    // Clean up previous source
+    this._stopSource(this.currentSource, this.currentGain, 0);
+
+    const tr  = this._tracks[trackId];
+    const dur = tr.end - tr.start;
+
+    const gainNode = this.ctx.createGain();
+    gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
+    gainNode.connect(this.masterGain);
+
+    const source = this.ctx.createBufferSource();
+    source.buffer = this.buffers[trackId];
+    source.loop   = false;
+    source.connect(gainNode);
+
+    // Fade in
+    this._ramp(gainNode, 0, tr.vol, Math.min(fadeInSec, dur * 0.3));
+
+    // Schedule fade out near end
+    const fadeOutAt = this.ctx.currentTime + dur - 2;
+    gainNode.gain.setValueAtTime(tr.vol, fadeOutAt);
+    gainNode.gain.linearRampToValueAtTime(0, this.ctx.currentTime + dur);
+
+    source.start(0, tr.start, dur);
+
+    source.onended = () => {
+      gainNode.disconnect();
+      if (this.currentSource === source) {
+        this.currentSource  = null;
+        this.currentGain    = null;
+        this.currentTrackId = null;
+        this.state = 'idle';
       }
+    };
+
+    this.currentSource  = source;
+    this.currentGain    = gainNode;
+    this.currentTrackId = trackId;
+    this.state = 'playing';
+  }
+
+  /* ── Stop current track ── */
+  stop(fadeMs = 2000) {
+    this._stopSource(this.currentSource, this.currentGain, fadeMs);
+    this.currentSource  = null;
+    this.currentGain    = null;
+    this.currentTrackId = null;
+    this.state = 'idle';
+  }
+
+  /* ── Internal: fade out and stop a source ── */
+  _stopSource(source, gainNode, fadeMs) {
+    if (!source || !gainNode) return;
+    const fadeSec = fadeMs / 1000;
+    const now     = this.ctx.currentTime;
+    gainNode.gain.cancelScheduledValues(now);
+    gainNode.gain.setValueAtTime(gainNode.gain.value, now);
+    gainNode.gain.linearRampToValueAtTime(0, now + fadeSec);
+    try { source.stop(now + fadeSec + 0.05); } catch(e) {}
+    setTimeout(() => { try { gainNode.disconnect(); } catch(e) {} }, fadeMs + 100);
+  }
+
+  /* ── Crossfade to new track ── */
+  crossfade(trackId, fadeMs = 2500) {
+    if (!this.ctx || !this.buffers[trackId]) return;
+    if (this.currentTrackId === trackId && this.state === 'playing') return;
+    this.state = 'transitioning';
+
+    const prevSource = this.currentSource;
+    const prevGain   = this.currentGain;
+
+    // Fade out previous
+    if (prevSource && prevGain) {
+      const fadeSec = fadeMs / 1000;
+      const now     = this.ctx.currentTime;
+      prevGain.gain.cancelScheduledValues(now);
+      prevGain.gain.setValueAtTime(prevGain.gain.value, now);
+      prevGain.gain.linearRampToValueAtTime(0, now + fadeSec);
+      try { prevSource.stop(now + fadeSec + 0.05); } catch(e) {}
+      setTimeout(() => { try { prevGain.disconnect(); } catch(e) {} }, fadeMs + 100);
     }
-    return;
+
+    this.currentSource  = null;
+    this.currentGain    = null;
+    this.currentTrackId = null;
+    this.state = 'idle';
+
+    // Start new track after short gap
+    setTimeout(() => { this.play(trackId, fadeMs / 1000); }, 300);
+  }
+
+  /* ── Handle scene change ── */
+  handleSceneChange(sceneId) {
+    // Scene 0–5: Track 0
+    if (sceneId >= 0 && sceneId <= 5) {
+      this.stopRain(1500);
+      if (this.state === 'playing' || this.state === 'transitioning') {
+        this.crossfade(0, 2500);
+      } else {
+        this.play(0);
+      }
+      return;
+    }
+
+    // Scene 6: Rain + Track 2 (once), then rain only
+    if (sceneId === 6) {
+      if (this.state === 'playing') this.stop(2000);
+      this.startRain(1500);
+      setTimeout(() => {
+        if (!this.buffers[2]) return;
+        this.play(2, 1.5);
+      }, 600);
+      return;
+    }
+
+    // Scene 7–12: Track 3
+    if (sceneId >= 7 && sceneId <= 12) {
+      this.stopRain(2000);
+      if (this.state === 'playing' || this.state === 'transitioning') {
+        this.crossfade(3, 2500);
+      } else {
+        this.play(3);
+      }
+      return;
+    }
+
+    // Scene 13+: Track 1, gradual volume decrease
+    if (sceneId >= 13) {
+      this.stopRain(1500);
+      if (this.currentTrackId !== 1) {
+        if (this.state === 'playing') {
+          this.crossfade(1, 3000);
+        } else {
+          this.play(1, 2);
+        }
+        // Gradual vol decrease over 30s
+        setTimeout(() => {
+          if (this.currentGain && this.currentTrackId === 1) {
+            const now = this.ctx.currentTime;
+            this.currentGain.gain.cancelScheduledValues(now);
+            this.currentGain.gain.setValueAtTime(this._tracks[1].vol, now);
+            this.currentGain.gain.linearRampToValueAtTime(0.04, now + 30);
+          }
+        }, 3500);
+      }
+      return;
+    }
+  }
+
+  /* ── Rain System ── */
+  startRain(fadeMs = 1500) {
+    if (this.rainActive || !this.ctx) return;
+    this.rainActive = true;
+
+    const ctx    = this.ctx;
+    const bufLen = ctx.sampleRate * 3;
+    const nBuf   = ctx.createBuffer(2, bufLen, ctx.sampleRate);
+    for (let ch = 0; ch < 2; ch++) {
+      const d = nBuf.getChannelData(ch);
+      for (let i = 0; i < bufLen; i++) d[i] = Math.random() * 2 - 1;
+    }
+
+    const noise  = ctx.createBufferSource();
+    noise.buffer = nBuf;
+    noise.loop   = true;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type  = 'lowpass';
+    filter.frequency.value = 1400;
+    filter.Q.value = 0.8;
+
+    const panner = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+
+    noise.connect(filter);
+    if (panner) { filter.connect(panner); panner.connect(this.rainGain); }
+    else          { filter.connect(this.rainGain); }
+
+    noise.start();
+    this.rainSource = noise;
+
+    // Fade in
+    const now = ctx.currentTime;
+    this.rainGain.gain.cancelScheduledValues(now);
+    this.rainGain.gain.setValueAtTime(0, now);
+    this.rainGain.gain.linearRampToValueAtTime(0.1, now + fadeMs / 1000);
+
+    // Random fluctuation
+    const fluctuate = () => {
+      if (!this.rainActive) return;
+      const v = 0.07 + Math.random() * 0.05;
+      const t = 0.2  + Math.random() * 0.4;
+      this.rainGain.gain.setTargetAtTime(v, ctx.currentTime, t * 0.3);
+      if (panner) panner.pan.setTargetAtTime((Math.random() - 0.5) * 0.3, ctx.currentTime, 0.5);
+      this._rainFlucTimer = setTimeout(fluctuate, t * 1000);
+    };
+    this._rainFlucTimer = setTimeout(fluctuate, 500);
+
+    // Thunder
+    const thunder = () => {
+      if (!this.rainActive) return;
+      const delay = 12000 + Math.random() * 10000;
+      this._thunderTimer = setTimeout(() => {
+        if (!this.rainActive) return;
+        const tBuf = ctx.createBuffer(1, ctx.sampleRate * 1.5, ctx.sampleRate);
+        const td   = tBuf.getChannelData(0);
+        for (let i = 0; i < td.length; i++)
+          td[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / td.length, 1.5) * 0.25;
+        const tSrc = ctx.createBufferSource(); tSrc.buffer = tBuf;
+        const tGain = ctx.createGain();        tGain.gain.value = 0.12;
+        const tFil  = ctx.createBiquadFilter();
+        tFil.type = 'lowpass'; tFil.frequency.value = 280;
+        tSrc.connect(tFil); tFil.connect(tGain); tGain.connect(this.masterGain);
+        tSrc.start();
+        tSrc.onended = () => { try { tGain.disconnect(); tFil.disconnect(); } catch(e) {} };
+        thunder();
+      }, delay);
+    };
+    thunder();
+  }
+
+  stopRain(fadeMs = 1500) {
+    if (!this.rainActive) return;
+    this.rainActive = false;
+    clearTimeout(this._rainFlucTimer);
+    clearTimeout(this._thunderTimer);
+
+    const now = this.ctx.currentTime;
+    this.rainGain.gain.cancelScheduledValues(now);
+    this.rainGain.gain.setValueAtTime(this.rainGain.gain.value, now);
+    this.rainGain.gain.linearRampToValueAtTime(0, now + fadeMs / 1000);
+
+    if (this.rainSource) {
+      try { this.rainSource.stop(now + fadeMs / 1000 + 0.1); } catch(e) {}
+      this.rainSource = null;
+    }
+  }
+
+  /* ── Master mute/unmute ── */
+  setMuted(muted) {
+    if (!this.ctx) return;
+    const now = this.ctx.currentTime;
+    this.masterGain.gain.cancelScheduledValues(now);
+    this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now);
+    this.masterGain.gain.linearRampToValueAtTime(muted ? 0 : 1, now + 0.4);
+  }
+
+  /* ── Resume context (mobile) ── */
+  resume() {
+    if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
   }
 }
 
-/* ════ First Unlock ════ */
+/* ════ Singleton ════ */
+const AM = new AudioManager();
+
+/* ════ Shim — keep existing function names working ════ */
+function initAudioContext() {}
+
 function handleFirstUnlock() {
-  if (MUSIC.unlocked) { toggleSound(); return; }
+  if (AM.ctx) { toggleSound(); return; }
 
-  // Create AudioContext inside user gesture
-  MUSIC.ctx    = new (window.AudioContext || window.webkitAudioContext)();
-  MUSIC.master = MUSIC.ctx.createGain();
-  MUSIC.master.gain.value = 1;
-  MUSIC.master.connect(MUSIC.ctx.destination);
-
-  for (let i = 0; i < 4; i++) {
-    MUSIC.gains[i] = MUSIC.ctx.createGain();
-    MUSIC.gains[i].gain.value = 0;
-    MUSIC.gains[i].connect(MUSIC.master);
-  }
-  MUSIC.rainGain = MUSIC.ctx.createGain();
-  MUSIC.rainGain.gain.value = 0;
-  MUSIC.rainGain.connect(MUSIC.master);
-
-  if (MUSIC.ctx.state === 'suspended') MUSIC.ctx.resume();
-
-  MUSIC.unlocked = true;
-  MUSIC.muted    = false;
+  AM.init();
+  AM.resume();
 
   const banner = document.getElementById('soundBanner');
   if (banner) banner.classList.add('gone');
   const btn = document.getElementById('soundToggle');
   if (btn) btn.textContent = '🔊';
 
-  // Load all tracks
-  MUSIC.tracks.forEach((tr, i) => loadTrack(i, tr.src));
-
-  // Wait for correct track to load then play
-  let idx = 0;
-  if (cur === 6) idx = 2;
-  else if (cur >= 7 && cur <= 12) idx = 3;
-  else if (cur >= 13) idx = 1;
-
-  function tryPlay() {
-    if (MUSIC.buffers[idx]) {
-      MUSIC.cur = idx;
-      playWithGap(idx, MUSIC.tracks[idx].vol, 1500);
-      showMusicIndicator(idx);
-      if (cur === 6) setTimeout(() => startRain(1500), 300);
-    } else {
-      setTimeout(tryPlay, 200);
-    }
-  }
-  tryPlay();
+  AM.loadTracks().then(() => {
+    AM.handleSceneChange(cur);
+  });
 }
 
-/* ════ Toggle Mute ════ */
 function toggleSound() {
-  if (!MUSIC.unlocked) { handleFirstUnlock(); return; }
-  MUSIC.muted = !MUSIC.muted;
+  if (!AM.ctx) { handleFirstUnlock(); return; }
+  const muted = AM.masterGain.gain.value > 0.1;
+  AM.setMuted(muted);
   const btn = document.getElementById('soundToggle');
-  if (!MUSIC.ctx) return;
-  if (MUSIC.muted) {
-    if (btn) btn.textContent = '🔇';
-    MUSIC.master.gain.cancelScheduledValues(MUSIC.ctx.currentTime);
-    MUSIC.master.gain.linearRampToValueAtTime(0, MUSIC.ctx.currentTime + 0.4);
-  } else {
-    if (btn) btn.textContent = '🔊';
-    MUSIC.master.gain.cancelScheduledValues(MUSIC.ctx.currentTime);
-    MUSIC.master.gain.linearRampToValueAtTime(1, MUSIC.ctx.currentTime + 0.4);
-    if (MUSIC.cur >= 0 && !MUSIC.sources[MUSIC.cur]) {
-      playWithGap(MUSIC.cur, MUSIC.tracks[MUSIC.cur].vol, 1000);
-    }
-  }
+  if (btn) btn.textContent = muted ? '🔇' : '🔊';
 }
 
-/* ════ Helpers ════ */
-function initAudioContext() {}
+function handleMusicForScene(toScene, fromScene) {
+  if (!AM.ctx) return;
+  AM.handleSceneChange(toScene);
+}
+
+function playSecretMusic() {
+  if (!AM.ctx) return;
+  AM.crossfade(1, 1500);
+}
+function stopSecretMusic() {
+  if (!AM.ctx) return;
+  AM.stop(1500);
+}
+function musicHandHoldBump() {
+  if (!AM.ctx || !AM.currentGain) return;
+  const g   = AM.currentGain;
+  const tr  = AM._tracks[AM.currentTrackId];
+  if (!tr) return;
+  const now = AM.ctx.currentTime;
+  g.gain.setValueAtTime(Math.min(1, tr.vol + 0.04), now);
+  g.gain.linearRampToValueAtTime(tr.vol, now + 2);
+}
 
 let _indTimer = null;
-function showMusicIndicator(idx) {
+function showMusicIndicator() {
   const el = document.getElementById('musicIndicator');
   if (!el) return;
   el.textContent = '♪';
   el.classList.add('show');
   if (_indTimer) clearTimeout(_indTimer);
   _indTimer = setTimeout(() => el.classList.remove('show'), 3000);
-}
-
-function playSecretMusic() {
-  if (!MUSIC.unlocked) return;
-  if (MUSIC.cur !== 1) crossfadeTo(1, 0.15, 1500);
-}
-function stopSecretMusic() { stopSlot(1, 1500); }
-function musicHandHoldBump() {
-  if (!MUSIC.unlocked || !MUSIC.gains[MUSIC.cur]) return;
-  const g   = MUSIC.gains[MUSIC.cur];
-  const base = MUSIC.tracks[MUSIC.cur] ? MUSIC.tracks[MUSIC.cur].vol : 0.2;
-  if (!MUSIC.ctx) return;
-  g.gain.cancelScheduledValues(MUSIC.ctx.currentTime);
-  g.gain.setValueAtTime(Math.min(1, base+0.04), MUSIC.ctx.currentTime);
-  g.gain.linearRampToValueAtTime(base, MUSIC.ctx.currentTime + 2);
 }
 /* ════════════════════════════════════════════════════════════
    NEW MUSIC SYSTEM END
