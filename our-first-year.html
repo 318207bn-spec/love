@@ -310,44 +310,30 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
 .media-slot{
   position:absolute;inset:0;
   opacity:0;
-  transition:opacity 0.7s ease;
+  transition:opacity 0.8s ease;
   overflow:hidden;
 }
-.media-slot.active{opacity:1}
-.media-slot.blur-out{filter:blur(4px);transition:opacity 0.5s ease,filter 0.5s ease}
+.media-slot.active{opacity:1 !important}
 .media-slot img{
   position:absolute;inset:0;width:100%;height:100%;
   object-fit:cover;
   animation:mediaZoom 6s ease-in-out forwards;
   filter:brightness(0.72) contrast(1.08);
+  display:block;
 }
 .media-slot video{
   position:absolute;inset:0;width:100%;height:100%;
   object-fit:cover;
   filter:brightness(0.68) contrast(1.05);
+  display:block;
 }
-/* Fast montage — shorter zoom */
 .media-slot.montage img{animation:mediaZoom 1.2s ease-in-out forwards}
-/* Ending — slow deep zoom */
 .media-slot.ending img{animation:mediaZoomSlow 12s ease-in-out forwards}
-@keyframes mediaZoom{
-  0%{transform:scale(1)}
-  100%{transform:scale(1.07)}
-}
-@keyframes mediaZoomSlow{
-  0%{transform:scale(1)}
-  100%{transform:scale(1.09)}
-}
-/* Unified dark gradient over all media */
+@keyframes mediaZoom{0%{transform:scale(1)}100%{transform:scale(1.07)}}
+@keyframes mediaZoomSlow{0%{transform:scale(1)}100%{transform:scale(1.09)}}
 #mediaLayer::after{
   content:'';position:absolute;inset:0;z-index:10;pointer-events:none;
-  background:linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.28) 0%,
-    rgba(0,0,0,0.08) 40%,
-    rgba(0,0,0,0.08) 60%,
-    rgba(0,0,0,0.55) 100%
-  );
+  background:linear-gradient(to bottom,rgba(0,0,0,0.28) 0%,rgba(0,0,0,0.08) 40%,rgba(0,0,0,0.08) 60%,rgba(0,0,0,0.55) 100%);
 }
 </style>
 </head>
@@ -876,12 +862,12 @@ function toggleSound(){AM.toggleMute();}
 // MEDIA ENGINE — declared BEFORE scene engine
 // ══════════════════════════════════════════════
 const ME = (() => {
-const SCENE_MEDIA = {
-  0: { type:'slideshow', speed:2800, mode:'normal',
-       imgs:['https://318207bn-spec.github.io/love/mem_01.jpg'] },
-  3: { type:'video', mode:'normal', src:'Scene 3.MOV' },
-  4: { type:'video', mode:'normal', src:'Scene 3.MOV' },
-};
+  const SCENE_MEDIA = {
+    0:  { type:'slideshow', speed:2800, mode:'normal', imgs:['mem_01.jpg'] },
+    2:  { type:'slideshow', speed:2500, mode:'normal', imgs:['1.jpg','2.jpg','3.jpg'] },
+    3:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
+    4:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
+  };
   let slotActive='A', slideshowTimer=null, slideIndex=0, currentVideo=null;
   const preloaded={};
   function slotEl(n){ return document.getElementById('slot'+n); }
@@ -1147,8 +1133,15 @@ window.addEventListener('resize',()=>{
 
 updateProgress(0);
 document.getElementById('sceneCounter').textContent='1 / '+TOTAL;
-ME.init();
-ME.enterScene(0);
+// Wait for DOM fully ready before starting media
+window.addEventListener('DOMContentLoaded', ()=>{
+  ME.init();
+  ME.enterScene(0);
+});
+// Fallback if DOMContentLoaded already fired
+if(document.readyState==='complete'||document.readyState==='interactive'){
+  setTimeout(()=>{ ME.init(); ME.enterScene(0); }, 50);
+}
 
 const COUPLE_DATE=new Date('2025-04-19T00:00:00');
 let ctrInterval=null,prevCtr={};
