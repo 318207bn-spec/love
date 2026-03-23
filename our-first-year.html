@@ -298,9 +298,65 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
 .sound-unlock-banner{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:600;background:rgba(244,114,182,0.12);border:1px solid rgba(244,114,182,0.3);border-radius:100px;padding:13px 28px;font-family:'Cinzel',serif;font-size:0.72rem;letter-spacing:0.18em;color:rgba(255,255,255,0.8);white-space:nowrap;cursor:pointer;backdrop-filter:blur(10px);animation:bannerPulse 2.2s ease-in-out infinite;transition:opacity 0.4s}
 .sound-unlock-banner.gone{opacity:0;pointer-events:none}
 @keyframes bannerPulse{0%,100%{box-shadow:0 0 0 0 rgba(244,114,182,0.25)}50%{box-shadow:0 0 0 10px rgba(244,114,182,0)}}
+
+/* ═══════════════════════════════════════
+   MEDIA LAYER — cinematic bg system
+═══════════════════════════════════════ */
+#mediaLayer{
+  position:fixed;inset:0;z-index:0;
+  pointer-events:none;overflow:hidden;
+}
+/* Slot A/B for crossfade */
+.media-slot{
+  position:absolute;inset:0;
+  opacity:0;
+  transition:opacity 0.7s ease;
+  overflow:hidden;
+}
+.media-slot.active{opacity:1}
+.media-slot.blur-out{filter:blur(4px);transition:opacity 0.5s ease,filter 0.5s ease}
+.media-slot img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;
+  animation:mediaZoom 6s ease-in-out forwards;
+  filter:brightness(0.72) contrast(1.08);
+}
+.media-slot video{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;
+  filter:brightness(0.68) contrast(1.05);
+}
+/* Fast montage — shorter zoom */
+.media-slot.montage img{animation:mediaZoom 1.2s ease-in-out forwards}
+/* Ending — slow deep zoom */
+.media-slot.ending img{animation:mediaZoomSlow 12s ease-in-out forwards}
+@keyframes mediaZoom{
+  0%{transform:scale(1)}
+  100%{transform:scale(1.07)}
+}
+@keyframes mediaZoomSlow{
+  0%{transform:scale(1)}
+  100%{transform:scale(1.09)}
+}
+/* Unified dark gradient over all media */
+#mediaLayer::after{
+  content:'';position:absolute;inset:0;z-index:10;pointer-events:none;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.28) 0%,
+    rgba(0,0,0,0.08) 40%,
+    rgba(0,0,0,0.08) 60%,
+    rgba(0,0,0,0.55) 100%
+  );
+}
 </style>
 </head>
 <body>
+
+<div id="mediaLayer">
+  <div class="media-slot" id="slotA"></div>
+  <div class="media-slot" id="slotB"></div>
+</div>
 
 <div class="overlay-black" id="blackOverlay"></div>
 <div class="hearts-layer" id="heartsLayer"></div>
@@ -827,6 +883,7 @@ function sid(n){return SCENE_ID[n]||'s'+n;}
 function goTo(n,cinematic=false){
   if(n===cur)return;
   vibrate(25);
+  ME.leaveScene(cur);
   updateProgress(n);
   AM.handleScene(n);
   const doSwitch=()=>{
@@ -855,6 +912,7 @@ function updateProgress(n){
 
 function onEnter(n){
   document.getElementById('soundToggle').classList.add('show');
+  ME.enterScene(n);
   initCanvas(n);
   if(n===1)initS1();
   if(n===2)initS2();
@@ -1024,6 +1082,7 @@ window.addEventListener('resize',()=>{
 
 updateProgress(0);
 document.getElementById('sceneCounter').textContent='1 / '+TOTAL;
+ME.enterScene(0);
 
 const COUPLE_DATE=new Date('2025-04-19T00:00:00');
 let ctrInterval=null,prevCtr={};
@@ -1084,6 +1143,187 @@ document.addEventListener('keydown',e=>{
   _kb+=e.key.toLowerCase();if(_kb.length>6)_kb=_kb.slice(-6);
   if(_kb.includes('piing')){_kb='';openSecretLetter();}
 });
+
+// ══════════════════════════════════════════════
+// MEDIA ENGINE — cinematic photo/video system
+// ══════════════════════════════════════════════
+const ME = (() => {
+  // ── Scene media config ──────────────────────
+  // Replace placeholder filenames with your actual files
+  // Images: put files in same folder as index.html
+  // Speeds: 'slow'=2500ms, 'normal'=2000ms, 'fast'=700ms
+  const SCENE_MEDIA = {
+    0: { type:'slideshow', speed:2800, mode:'normal',
+         imgs:['mem_01.jpg','mem_02.jpg','mem_03.jpg'] },
+    1: { type:'slideshow', speed:2600, mode:'normal',
+         imgs:['mem_04.jpg','mem_05.jpg','mem_06.jpg'] },
+    2: { type:'slideshow', speed:2500, mode:'normal',
+         imgs:['mem_07.jpg','mem_08.jpg','mem_09.jpg'] },
+    3: { type:'video', mode:'normal',
+         src:'Scene 3.MOV' },
+    4: { type:'video', mode:'normal',
+         src:'Scene 3.MOV' },
+    // 5: no media — rain only
+    6: { type:'slideshow', speed:3000, mode:'normal',
+         imgs:['mem_10.jpg','mem_11.jpg','mem_12.jpg'] },
+    7: { type:'slideshow', speed:2400, mode:'normal',
+         imgs:['mem_13.jpg','mem_14.jpg','mem_15.jpg'] },
+    8: { type:'slideshow', speed:2200, mode:'normal',
+         imgs:['mem_16.jpg','mem_17.jpg','mem_18.jpg'] },
+    9: { type:'slideshow', speed:2000, mode:'normal',
+         imgs:['mem_19.jpg','mem_20.jpg','mem_21.jpg'] },
+    10: { type:'slideshow', speed:700, mode:'montage',
+          imgs:['mem_22.jpg','mem_23.jpg','mem_24.jpg','mem_25.jpg','mem_26.jpg'] },
+    11: { type:'slideshow', speed:650, mode:'montage',
+          imgs:['mem_27.jpg','mem_28.jpg','mem_29.jpg','mem_30.jpg','mem_31.jpg'] },
+    12: { type:'slideshow', speed:700, mode:'montage',
+          imgs:['mem_32.jpg','mem_33.jpg','mem_34.jpg','mem_35.jpg'] },
+    13: { type:'slideshow', speed:5000, mode:'ending',
+          imgs:['mem_end1.jpg','mem_end2.jpg'] },
+    14: { type:'slideshow', speed:6000, mode:'ending',
+          imgs:['mem_end3.jpg'] },
+    15: { type:'slideshow', speed:7000, mode:'ending',
+          imgs:['mem_end4.jpg'] },
+  };
+
+  let slotActive = 'A'; // which slot is showing
+  let slideshowTimer = null;
+  let slideIndex = 0;
+  let currentScene = -1;
+  let currentVideo = null;
+  const preloaded = {}; // cache
+
+  function slotEl(name){ return document.getElementById('slot'+name); }
+  function inactiveSlot(){ return slotActive==='A'?'B':'A'; }
+
+  // Preload all images eagerly on page load
+  function preloadAll(){
+    Object.values(SCENE_MEDIA).forEach(cfg=>{
+      if(cfg.type==='slideshow' && cfg.imgs){
+        cfg.imgs.forEach(src=>{
+          if(preloaded[src])return;
+          const img=new Image();img.src=src;preloaded[src]=img;
+        });
+      }
+    });
+  }
+
+  // Build an img element with correct classes
+  function makeImg(src, mode){
+    const img=document.createElement('img');
+    img.src=src;img.alt='';img.draggable=false;
+    return img;
+  }
+
+  // Build a video element
+  function makeVideo(src){
+    const v=document.createElement('video');
+    v.src=src;v.muted=true;v.playsInline=true;v.autoplay=false;v.loop=true;
+    v.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.68) contrast(1.05)';
+    return v;
+  }
+
+  // Show a single image in the inactive slot, then swap
+  function showImg(src, mode, instant){
+    const next = inactiveSlot();
+    const nextEl = slotEl(next);
+    nextEl.innerHTML='';
+    nextEl.className='media-slot'+(mode?' '+mode:'');
+
+    const img = makeImg(src, mode);
+    // Reset zoom by recreating element
+    nextEl.appendChild(img);
+
+    if(instant){
+      // Hard swap
+      slotEl(slotActive).classList.remove('active');
+      nextEl.classList.add('active');
+      slotActive = next;
+    } else {
+      // Crossfade
+      const prev = slotActive;
+      const prevEl = slotEl(prev);
+      nextEl.classList.add('active');
+      prevEl.classList.remove('active');
+      slotActive = next;
+      // cleanup old slot after transition
+      setTimeout(()=>{ prevEl.innerHTML=''; prevEl.className='media-slot'; }, 900);
+    }
+  }
+
+  // Start / restart slideshow for a scene
+  function startSlideshow(cfg){
+    stopAll();
+    if(!cfg.imgs||!cfg.imgs.length)return;
+    slideIndex=0;
+    const show=()=>{
+      const src=cfg.imgs[slideIndex % cfg.imgs.length];
+      showImg(src, cfg.mode, slideIndex===0);
+      slideIndex++;
+      slideshowTimer=setTimeout(show, cfg.speed);
+    };
+    show();
+  }
+
+  // Start video for a scene
+  function startVideo(cfg){
+    stopAll();
+    const next=inactiveSlot();
+    const nextEl=slotEl(next);
+    nextEl.innerHTML='';nextEl.className='media-slot '+cfg.mode;
+    const v=makeVideo(cfg.src);
+    nextEl.appendChild(v);
+    // Fade in
+    const prevEl=slotEl(slotActive);
+    nextEl.classList.add('active');
+    prevEl.classList.remove('active');
+    slotActive=next;
+    setTimeout(()=>{ prevEl.innerHTML='';prevEl.className='media-slot'; },900);
+    v.play().catch(()=>{});
+    currentVideo=v;
+  }
+
+  // Stop everything
+  function stopAll(){
+    if(slideshowTimer){clearTimeout(slideshowTimer);slideshowTimer=null;}
+    if(currentVideo){try{currentVideo.pause();currentVideo.currentTime=0;}catch(e){}currentVideo=null;}
+    slideIndex=0;
+  }
+
+  // Clear both slots
+  function clearSlots(){
+    stopAll();
+    ['A','B'].forEach(n=>{
+      const el=slotEl(n);
+      el.classList.remove('active');
+      el.innerHTML='';
+      el.className='media-slot';
+    });
+    slotActive='A';
+  }
+
+  return {
+    init(){ preloadAll(); },
+
+    enterScene(n){
+      currentScene=n;
+      const cfg=SCENE_MEDIA[n];
+      if(!cfg){ clearSlots(); return; }
+      if(cfg.type==='slideshow') startSlideshow(cfg);
+      else if(cfg.type==='video') startVideo(cfg);
+    },
+
+    leaveScene(n){
+      // Pause video immediately when leaving
+      if(currentVideo){try{currentVideo.pause();currentVideo.currentTime=0;}catch(e){}}
+    },
+
+    stop(){ clearSlots(); }
+  };
+})();
+
+// Initialise on load
+ME.init();
 </script>
 </body>
 </html>
