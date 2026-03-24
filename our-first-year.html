@@ -253,6 +253,137 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
 .dn-conclusion{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.05rem,4vw,1.3rem);line-height:2;color:rgba(255,255,255,0.7);margin:20px 0 28px;max-width:340px}
 .dn-conclusion .dn-em{background:linear-gradient(135deg,#f472b6,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
 
+/* ══════════════════════════════════════
+   SCENE G — ช่วงเวลาพิเศษ (NEW)
+══════════════════════════════════════ */
+#sG{background:#000;overflow:hidden}
+
+/* Dark cinematic overlay on top of video */
+.sg-overlay{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.25) 40%,rgba(0,0,0,0.25) 60%,rgba(0,0,0,0.75) 100%);
+}
+
+/* Dimmer — activated when a card is open */
+.sg-dimmer{
+  position:absolute;inset:0;z-index:3;pointer-events:none;
+  background:rgba(0,0,0,0);transition:background 0.6s ease;
+}
+.sg-dimmer.dim{background:rgba(0,0,0,0.55);}
+
+/* Top header */
+.sg-header{
+  position:relative;z-index:10;text-align:center;
+  padding-bottom:16px;
+}
+.sg-eyebrow{
+  font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.5em;
+  color:rgba(255,255,255,0.3);text-transform:uppercase;display:block;margin-bottom:10px;
+  animation:fadeUp 0.9s 0.3s both;
+}
+.sg-title{
+  font-family:'Cinzel',serif;font-size:clamp(1.3rem,5.5vw,1.9rem);font-weight:600;
+  letter-spacing:0.06em;line-height:1.35;
+  background:linear-gradient(135deg,#fbcfe8,#f472b6,#fbbf24);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 20px rgba(244,114,182,0.35));
+  animation:fadeUp 0.9s 0.6s both;
+}
+.sg-sub{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(0.9rem,3.2vw,1.05rem);color:rgba(255,255,255,0.35);
+  margin-top:8px;animation:fadeUp 0.9s 0.9s both;
+}
+
+/* Memory card grid */
+.sg-cards{
+  position:relative;z-index:10;
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  width:100%;max-width:380px;margin:18px auto 0;
+}
+
+.sg-card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.09);
+  border-radius:18px;
+  padding:18px 14px 16px;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  transition:transform 0.25s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  animation:fadeUp 0.8s both;
+  -webkit-tap-highlight-color:transparent;
+}
+.sg-card:nth-child(1){animation-delay:1.1s}
+.sg-card:nth-child(2){animation-delay:1.3s}
+.sg-card:nth-child(3){animation-delay:1.5s}
+.sg-card:nth-child(4){animation-delay:1.7s}
+
+/* Shimmer layer */
+.sg-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(244,114,182,0.08),rgba(251,191,36,0.04));
+  opacity:0;transition:opacity 0.4s;
+}
+.sg-card:active{transform:scale(0.96);}
+.sg-card.sg-open{
+  border-color:rgba(244,114,182,0.35);
+  box-shadow:0 0 28px rgba(244,114,182,0.2), 0 4px 20px rgba(0,0,0,0.5);
+}
+.sg-card.sg-open::before{opacity:1;}
+
+/* Glow orb behind open card */
+.sg-card::after{
+  content:'';position:absolute;top:-40%;left:-40%;width:180%;height:180%;
+  background:radial-gradient(circle,rgba(244,114,182,0.12) 0%,transparent 65%);
+  opacity:0;transition:opacity 0.5s;pointer-events:none;
+}
+.sg-card.sg-open::after{opacity:1;}
+
+.sg-card-icon{font-size:1.7rem;display:block;margin-bottom:8px;transition:transform 0.3s;}
+.sg-card.sg-open .sg-card-icon{transform:scale(1.15);}
+
+.sg-card-label{
+  font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.25em;
+  color:rgba(255,255,255,0.4);text-transform:uppercase;display:block;margin-bottom:6px;
+}
+.sg-card-title{
+  font-family:'Cormorant Garamond',serif;font-size:clamp(0.9rem,3.2vw,1rem);
+  font-weight:400;color:rgba(255,255,255,0.75);line-height:1.4;display:block;
+}
+
+/* Expanded text */
+.sg-card-body{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(0.85rem,3vw,0.95rem);color:rgba(255,255,255,0.62);
+  line-height:1.85;
+  max-height:0;overflow:hidden;
+  transition:max-height 0.55s cubic-bezier(0.4,0,0.2,1), opacity 0.5s ease, margin-top 0.3s;
+  opacity:0;margin-top:0;
+}
+.sg-card.sg-open .sg-card-body{max-height:200px;opacity:1;margin-top:10px;}
+
+.sg-card-quote{
+  color:rgba(244,114,182,0.8);font-style:normal;
+  display:block;margin-top:6px;font-size:0.9em;
+}
+
+/* Tap hint */
+.sg-hint-row{
+  position:relative;z-index:10;text-align:center;
+  font-family:'Sarabun',sans-serif;font-size:0.68rem;
+  letter-spacing:0.18em;color:rgba(255,255,255,0.18);
+  margin-top:14px;animation:fadeUp 0.8s 2s both;
+}
+
+/* Next button area */
+.sg-next-wrap{
+  position:relative;z-index:10;text-align:center;
+  margin-top:18px;animation:fadeUp 0.8s 2.2s both;
+}
+
+/* ══════════════════════════════════════ */
+
 /* SCENE E */
 #sE{background:#000;overflow:hidden}
 .credits-wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
@@ -335,126 +466,6 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
   content:'';position:absolute;inset:0;z-index:10;pointer-events:none;
   background:linear-gradient(to bottom,rgba(0,0,0,0.28) 0%,rgba(0,0,0,0.08) 40%,rgba(0,0,0,0.08) 60%,rgba(0,0,0,0.55) 100%);
 }
-// ══════════════════════════════════════════════
-// SCENE sE2 — ช่วงเวลาพิเศษ
-// ══════════════════════════════════════════════
-
-// 3a. เพิ่มใน SCENE_MEDIA — วางในตัวแปร SCENE_MEDIA ของ ME
-// เพิ่มบรรทัดนี้ใน object SCENE_MEDIA ในตัว ME:
-//   'se2': { type:'video', mode:'normal', src:'special.mp4' }
-// วิธีเพิ่มโดยไม่แตะ ME ดั้งเดิม — patch หลัง ME ถูก declare:
-(function patchME() {
-  // Access internal SCENE_MEDIA via enterScene override
-  const _origEnter = ME.enterScene.bind(ME);
-  ME.enterScene = function(n) {
-    if (n === 'se2') {
-      // trigger video manually since key is string
-      _origEnter.call(ME, n);
-      return;
-    }
-    _origEnter(n);
-  };
-})();
-
-// 3b. Memory card data
-const SE2_MEMORIES = [
-  {
-    icon: '🌅',
-    text: 'วันแรกที่เจอกัน\nเค้าไม่รู้หรอกว่ามันจะเปลี่ยนชีวิตไป\nแต่ตอนที่เห็นเธอ\nมีบางอย่างในใจที่บอกว่า "คนนี้แหละ"'
-  },
-  {
-    icon: '🎂',
-    text: 'ทุกวันพิเศษที่ผ่านมา\nมีเธออยู่ในนั้นเสมอ\nทำให้มันพิเศษขึ้นกว่าเดิม\nโดยไม่ต้องทำอะไรเลย'
-  },
-  {
-    icon: '🌙',
-    text: 'มีคืนที่เงียบมาก\nแต่ไม่รู้สึกโดดเดี่ยวเลย\nเพราะรู้ว่าเธออยู่ข้างๆ\nแค่นั้นก็พอแล้ว'
-  },
-  {
-    icon: '💌',
-    text: 'ทุกครั้งที่นึกถึงเธอ\nมันอุ่นขึ้นมาในอก\nแบบที่ไม่มีคำไหนอธิบายได้ดีพอ\nขอบคุณที่เป็นเธอ 💗'
-  }
-];
-
-let se2OpenedCount = 0;
-let se2SoundCtx = null;
-
-// 3c. Simple click sound (ไม่แตะ AM)
-function se2PlayClickSound() {
-  try {
-    if (!se2SoundCtx) {
-      se2SoundCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    const osc  = se2SoundCtx.createOscillator();
-    const gain = se2SoundCtx.createGain();
-    osc.connect(gain);
-    gain.connect(se2SoundCtx.destination);
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(880, se2SoundCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(440, se2SoundCtx.currentTime + 0.18);
-    gain.gain.setValueAtTime(0.12, se2SoundCtx.currentTime);
-    gain.gain.linearRampToValueAtTime(0, se2SoundCtx.currentTime + 0.22);
-    osc.start(se2SoundCtx.currentTime);
-    osc.stop(se2SoundCtx.currentTime + 0.25);
-  } catch(e) {}
-}
-
-// 3d. Open memory card popup
-function openMemory(idx) {
-  const data = SE2_MEMORIES[idx];
-  if (!data) return;
-  se2PlayClickSound();
-  vibrate(20);
-
-  // Mark card as opened
-  const card = document.getElementById('se2c' + idx);
-  if (card) card.classList.add('se2-opened');
-
-  // Fill popup content
-  document.getElementById('se2PopupIcon').textContent = data.icon;
-  document.getElementById('se2PopupText').textContent  = data.text;
-
-  // Open popup
-  const popup = document.getElementById('se2Popup');
-  popup.classList.add('open');
-
-  // Count opened cards — show Next after all 4 opened
-  const openedCards = document.querySelectorAll('.se2-card.se2-opened').length;
-  if (openedCards >= SE2_MEMORIES.length) {
-    setTimeout(() => {
-      document.getElementById('se2Next').classList.add('show');
-    }, 600);
-  }
-}
-
-// 3e. Close memory popup
-function closeMemory(e, force) {
-  if (force || !e || e.target.id === 'se2Popup') {
-    document.getElementById('se2Popup').classList.remove('open');
-    se2PlayClickSound();
-  }
-}
-
-// 3f. Init scene sE2
-function initSE2() {
-  // Reset cards
-  document.querySelectorAll('.se2-card').forEach(c => {
-    c.classList.remove('se2-opened', 'se2-visible');
-  });
-  document.getElementById('se2Next').classList.remove('show');
-  document.getElementById('se2Popup').classList.remove('open');
-
-  // Animate cards in with stagger
-  document.querySelectorAll('.se2-card').forEach((c, i) => {
-    setTimeout(() => {
-      c.style.animationDelay = '0s';
-      c.classList.add('se2-visible');
-    }, 300 + i * 150);
-  });
-
-  // Init canvas
-  initCanvas('se2');
-}
 </style>
 </head>
 <body>
@@ -531,7 +542,6 @@ function initSE2() {
     <p class="s2-date-display">30 มกราคม 2568</p>
     <h2 class="t-title grad-pink" style="margin-bottom:6px">วันแรกที่เจอ Piing</h2>
     <p class="t-caption" style="color:rgba(255,255,255,0.4);margin-bottom:14px">วันที่เค้ากล้าพอจะเปิดใจให้ใหม่</p>
-    <!-- Photo slideshow inline -->
     <div id="s2Photos" style="width:100%;max-width:340px;margin:0 auto 16px;border-radius:18px;overflow:hidden;position:relative;aspect-ratio:4/3;box-shadow:0 8px 32px rgba(0,0,0,0.6)">
       <img id="s2Img" src="" alt="" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.9) contrast(1.05)">
       <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,rgba(0,0,0,0.4))"></div>
@@ -737,11 +747,82 @@ function initSE2() {
       <div class="dn-side dn-right"><span class="dn-label">วันนี้</span><span class="dn-icon">🌙</span><span class="dn-item">สบายใจ มั่นคง</span><span class="dn-item">เข้าใจกัน</span><span class="dn-item">รู้ว่าเธอยังอยู่</span><span class="dn-item">ทุกอย่างคุ้นเคย</span><span class="dn-item">รู้ว่าสำคัญ</span></div>
     </div>
     <p class="dn-conclusion">"ความรักของเราไม่ได้ลดลง<br>มันแค่<span class="dn-em">โตขึ้น</span>"</p>
-    <button class="btn btn-pink" onclick="goTo(14)">ต่อไป →</button>
+    <button class="btn btn-pink" onclick="goTo(14)">ช่วงเวลาพิเศษ →</button>
   </div>
 </section>
 
-<!-- SCENE E (14) -->
+<!-- ══════════════════════════════════════════
+     SCENE G (14) — ช่วงเวลาพิเศษ  [NEW]
+══════════════════════════════════════════ -->
+<section class="scene" id="sG">
+  <!-- Cinematic overlays -->
+  <div class="sg-overlay"></div>
+  <div class="sg-dimmer" id="sgDimmer"></div>
+  <canvas class="bg-canvas" id="cG"></canvas>
+
+  <div class="box" style="padding:0 4px">
+    <!-- Header -->
+    <div class="sg-header">
+      <span class="sg-eyebrow">ความทรงจำ · Memories</span>
+      <h1 class="sg-title">ช่วงเวลาพิเศษ<br><span style="font-size:0.55em;letter-spacing:0.18em;color:rgba(255,255,255,0.4)">ของเรา</span></h1>
+      <p class="sg-sub">"ทุกช่วงเวลาเล็กๆ<br>คือสิ่งที่เค้าจำไว้มากที่สุด"</p>
+    </div>
+
+    <!-- Memory cards -->
+    <div class="sg-cards" id="sgCards">
+
+      <div class="sg-card" id="sgCard0" onclick="toggleSgCard(0)">
+        <span class="sg-card-icon">🌅</span>
+        <span class="sg-card-label">ช่วงแรก</span>
+        <span class="sg-card-title">ตอนที่เริ่มรู้ว่าชอบ</span>
+        <div class="sg-card-body">
+          วันที่เค้าเริ่มแอบรอข้อความจากเธอโดยไม่รู้ตัว เปิดโทรศัพท์บ่อยกว่าปกติ
+          <span class="sg-card-quote">"แค่ชื่อเธอขึ้นก็ยิ้มแล้ว"</span>
+        </div>
+      </div>
+
+      <div class="sg-card" id="sgCard1" onclick="toggleSgCard(1)">
+        <span class="sg-card-icon">🤭</span>
+        <span class="sg-card-label">ความน่ารัก</span>
+        <span class="sg-card-title">เธอตอนหัวเราะ</span>
+        <div class="sg-card-body">
+          เสียงหัวเราะของเธอ มันทำให้ทุกอย่างดูเบาลงเสมอ เค้าแอบดูอยู่บ่อยๆ
+          <span class="sg-card-quote">"คนนี้แหละ คนที่ใช่"</span>
+        </div>
+      </div>
+
+      <div class="sg-card" id="sgCard2" onclick="toggleSgCard(2)">
+        <span class="sg-card-icon">🌙</span>
+        <span class="sg-card-label">ค่ำคืน</span>
+        <span class="sg-card-title">คุยกันจนดึก</span>
+        <div class="sg-card-body">
+          คืนที่นอนไม่หลับแล้วก็คุยกันไปเรื่อยๆ ไม่มีเรื่องอะไรสำคัญ แต่ก็ไม่อยากวาง
+          <span class="sg-card-quote">"อยู่ด้วยกันทางไหนก็ดี"</span>
+        </div>
+      </div>
+
+      <div class="sg-card" id="sgCard3" onclick="toggleSgCard(3)">
+        <span class="sg-card-icon">💗</span>
+        <span class="sg-card-label">ตอนนี้</span>
+        <span class="sg-card-title">ครบ 1 ปีแล้วนะ</span>
+        <div class="sg-card-body">
+          365 วันที่ผ่านมา มีทั้งหัวเราะและน้ำตา แต่เค้าไม่เคยเสียใจเลยสักวันที่เลือกเธอ
+          <span class="sg-card-quote">"ยังอยากเลือกเธออยู่เสมอ 💛"</span>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="sg-hint-row">แตะ card เพื่อเปิดความทรงจำ ✨</p>
+
+    <div class="sg-next-wrap">
+      <button class="btn btn-pink" onclick="goTo(15)">ดู Credits →</button>
+    </div>
+  </div>
+</section>
+<!-- ══════════════════════════════════════════ -->
+
+<!-- SCENE E (15) -->
 <section class="scene" id="sE">
   <canvas class="bg-canvas" id="cE"></canvas>
   <div class="credits-wrap">
@@ -762,10 +843,10 @@ function initSE2() {
       <div style="height:80px"></div>
     </div>
   </div>
-  <div class="credits-next" id="creditsNext"><button class="btn btn-dark" onclick="goTo(15)">💌 &nbsp;ข้อความลับ</button></div>
+  <div class="credits-next" id="creditsNext"><button class="btn btn-dark" onclick="goTo(16)">💌 &nbsp;ข้อความลับ</button></div>
 </section>
 
-<!-- SCENE F (15) -->
+<!-- SCENE F (16) -->
 <section class="scene" id="sF">
   <canvas class="bg-canvas" id="cF"></canvas>
   <div class="box">
@@ -950,10 +1031,12 @@ const AM = (() => {
         if(curTrack!==2){stopMusic(1500);setTimeout(()=>play(2,1.5),1800);}
         return;
       }
-      // Scene 7–12: Track 1
-      if(n>=7&&n<=12){stopRain(2000);if(curTrack!==1)crossfade(1,2000);return;}
-      // Scene 13+: Track 3 fade out gradually
-      if(n>=13){
+      // Scene 7–13: Track 1
+      if(n>=7&&n<=13){stopRain(2000);if(curTrack!==1)crossfade(1,2000);return;}
+      // Scene 14 (sG special moments): continue track 1 softly
+      if(n===14){stopRain(1500);if(curTrack!==1)crossfade(1,2000);return;}
+      // Scene 15+: Track 3 fade out gradually
+      if(n>=15){
         stopRain(1500);
         if(curTrack!==3){
           crossfade(3,2500);
@@ -992,6 +1075,7 @@ const ME = (() => {
     2:  { type:'slideshow', speed:2500, mode:'normal', imgs:['1.jpg','2.jpg','3.jpg'] },
     3:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
     4:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
+    14: { type:'video', mode:'normal', src:'special.MOV' },  /* NEW: Scene G */
   };
   let slotActive='A', slideshowTimer=null, slideIndex=0, currentVideo=null;
   const preloaded={};
@@ -1052,8 +1136,13 @@ const ME = (() => {
 // SCENE ENGINE
 // ══════════════════════════════════════════════
 let cur=0;
-const TOTAL=17;
-const SCENE_ID={0:'s0',1:'s1',2:'s2',3:'s3',4:'s4',5:'s5',6:'s6',7:'s7',8:'s8',9:'s9',10:'sA',11:'sB',12:'sC',13:'sD',14:'sE2',15:'sE',16:'sF'};
+const TOTAL=17; /* updated: was 16, now 17 */
+const SCENE_ID={
+  0:'s0',1:'s1',2:'s2',3:'s3',4:'s4',5:'s5',6:'s6',
+  7:'s7',8:'s8',9:'s9',10:'sA',11:'sB',12:'sC',13:'sD',
+  14:'sG', /* NEW: ช่วงเวลาพิเศษ */
+  15:'sE',16:'sF'
+};
 function sid(n){return SCENE_ID[n]||'s'+n;}
 
 function goTo(n,cinematic=false){
@@ -1103,14 +1192,15 @@ function onEnter(n){
   if(n===11)initSB();
   if(n===12)initSC();
   if(n===13)initSD();
-  if(n===14)initSE2();
+  if(n===14)initSG();  /* NEW */
   if(n===15)initSE();
+  if(n===16)initSF();
 }
 
 // Canvas particles
 const canvasInits={};
 function initCanvas(n){
-  const ids={0:'c0',1:'c1',2:'c2',3:'c3',4:'c4',5:'c5',7:'c7',10:'cA',11:'cB',13:'cD',14:'cE',15:'cF'};
+  const ids={0:'c0',1:'c1',2:'c2',3:'c3',4:'c4',5:'c5',7:'c7',10:'cA',11:'cB',13:'cD',14:'cG',15:'cE',16:'cF'};
   if(!ids[n]||canvasInits[n])return;
   canvasInits[n]=true;
   const cv=document.getElementById(ids[n]);if(!cv)return;
@@ -1266,7 +1356,7 @@ document.addEventListener('touchmove',e=>{
 },{passive:false});
 
 window.addEventListener('resize',()=>{
-  ['c0','c1','c2','c3','c4','c5','c7','cA','cB','cD','cE','cF'].forEach(id=>{
+  ['c0','c1','c2','c3','c4','c5','c7','cA','cB','cD','cG','cE','cF'].forEach(id=>{
     const c=document.getElementById(id);if(c){c.width=window.innerWidth;c.height=window.innerHeight;}
   });
 });
@@ -1343,7 +1433,82 @@ document.addEventListener('keydown',e=>{
   if(_kb.includes('piing')){_kb='';openSecretLetter();}
 });
 
-// Initialise ME on load — already called above
+// ══════════════════════════════════════════════
+// SCENE G — ช่วงเวลาพิเศษ  [NEW CODE BLOCK]
+// ══════════════════════════════════════════════
+
+// Subtle card-tap sound using Web Audio API (independent of AM)
+function playCardSound(type){
+  try{
+    const ac=new(window.AudioContext||window.webkitAudioContext)();
+    const o=ac.createOscillator();
+    const g=ac.createGain();
+    o.connect(g);g.connect(ac.destination);
+    if(type==='open'){
+      // soft chime: quick rise
+      o.type='sine';
+      o.frequency.setValueAtTime(480,ac.currentTime);
+      o.frequency.exponentialRampToValueAtTime(880,ac.currentTime+0.12);
+      g.gain.setValueAtTime(0,ac.currentTime);
+      g.gain.linearRampToValueAtTime(0.07,ac.currentTime+0.04);
+      g.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+0.45);
+      o.start(ac.currentTime);
+      o.stop(ac.currentTime+0.5);
+    } else {
+      // soft close: gentle fall
+      o.type='sine';
+      o.frequency.setValueAtTime(660,ac.currentTime);
+      o.frequency.exponentialRampToValueAtTime(340,ac.currentTime+0.15);
+      g.gain.setValueAtTime(0,ac.currentTime);
+      g.gain.linearRampToValueAtTime(0.05,ac.currentTime+0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+0.35);
+      o.start(ac.currentTime);
+      o.stop(ac.currentTime+0.4);
+    }
+    o.onended=()=>{try{ac.close();}catch(e){}};
+  }catch(e){}
+}
+
+let _sgOpenCard=-1; // track which card is open (-1 = none)
+
+function toggleSgCard(idx){
+  vibrate(18);
+  const cards=document.querySelectorAll('.sg-card');
+  const dimmer=document.getElementById('sgDimmer');
+  const card=document.getElementById('sgCard'+idx);
+  if(!card)return;
+
+  const isOpen=card.classList.contains('sg-open');
+
+  if(isOpen){
+    // Close this card
+    card.classList.remove('sg-open');
+    dimmer.classList.remove('dim');
+    _sgOpenCard=-1;
+    playCardSound('close');
+  } else {
+    // Close previously open card first
+    cards.forEach(c=>c.classList.remove('sg-open'));
+    // Open this card with a slight delay for cinematic feel
+    setTimeout(()=>{
+      card.classList.add('sg-open');
+      dimmer.classList.add('dim');
+      _sgOpenCard=idx;
+      playCardSound('open');
+      spawnHeart(); // subtle single heart floating up
+    }, 80);
+  }
+}
+
+function initSG(){
+  // Reset all cards to closed state
+  document.querySelectorAll('.sg-card').forEach(c=>c.classList.remove('sg-open'));
+  const dimmer=document.getElementById('sgDimmer');
+  if(dimmer)dimmer.classList.remove('dim');
+  _sgOpenCard=-1;
+}
+
+// ══════════════════════════════════════════════
 
 </script>
 </body>
