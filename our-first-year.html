@@ -335,6 +335,126 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
   content:'';position:absolute;inset:0;z-index:10;pointer-events:none;
   background:linear-gradient(to bottom,rgba(0,0,0,0.28) 0%,rgba(0,0,0,0.08) 40%,rgba(0,0,0,0.08) 60%,rgba(0,0,0,0.55) 100%);
 }
+// ══════════════════════════════════════════════
+// SCENE sE2 — ช่วงเวลาพิเศษ
+// ══════════════════════════════════════════════
+
+// 3a. เพิ่มใน SCENE_MEDIA — วางในตัวแปร SCENE_MEDIA ของ ME
+// เพิ่มบรรทัดนี้ใน object SCENE_MEDIA ในตัว ME:
+//   'se2': { type:'video', mode:'normal', src:'special.mp4' }
+// วิธีเพิ่มโดยไม่แตะ ME ดั้งเดิม — patch หลัง ME ถูก declare:
+(function patchME() {
+  // Access internal SCENE_MEDIA via enterScene override
+  const _origEnter = ME.enterScene.bind(ME);
+  ME.enterScene = function(n) {
+    if (n === 'se2') {
+      // trigger video manually since key is string
+      _origEnter.call(ME, n);
+      return;
+    }
+    _origEnter(n);
+  };
+})();
+
+// 3b. Memory card data
+const SE2_MEMORIES = [
+  {
+    icon: '🌅',
+    text: 'วันแรกที่เจอกัน\nเค้าไม่รู้หรอกว่ามันจะเปลี่ยนชีวิตไป\nแต่ตอนที่เห็นเธอ\nมีบางอย่างในใจที่บอกว่า "คนนี้แหละ"'
+  },
+  {
+    icon: '🎂',
+    text: 'ทุกวันพิเศษที่ผ่านมา\nมีเธออยู่ในนั้นเสมอ\nทำให้มันพิเศษขึ้นกว่าเดิม\nโดยไม่ต้องทำอะไรเลย'
+  },
+  {
+    icon: '🌙',
+    text: 'มีคืนที่เงียบมาก\nแต่ไม่รู้สึกโดดเดี่ยวเลย\nเพราะรู้ว่าเธออยู่ข้างๆ\nแค่นั้นก็พอแล้ว'
+  },
+  {
+    icon: '💌',
+    text: 'ทุกครั้งที่นึกถึงเธอ\nมันอุ่นขึ้นมาในอก\nแบบที่ไม่มีคำไหนอธิบายได้ดีพอ\nขอบคุณที่เป็นเธอ 💗'
+  }
+];
+
+let se2OpenedCount = 0;
+let se2SoundCtx = null;
+
+// 3c. Simple click sound (ไม่แตะ AM)
+function se2PlayClickSound() {
+  try {
+    if (!se2SoundCtx) {
+      se2SoundCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    const osc  = se2SoundCtx.createOscillator();
+    const gain = se2SoundCtx.createGain();
+    osc.connect(gain);
+    gain.connect(se2SoundCtx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, se2SoundCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(440, se2SoundCtx.currentTime + 0.18);
+    gain.gain.setValueAtTime(0.12, se2SoundCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0, se2SoundCtx.currentTime + 0.22);
+    osc.start(se2SoundCtx.currentTime);
+    osc.stop(se2SoundCtx.currentTime + 0.25);
+  } catch(e) {}
+}
+
+// 3d. Open memory card popup
+function openMemory(idx) {
+  const data = SE2_MEMORIES[idx];
+  if (!data) return;
+  se2PlayClickSound();
+  vibrate(20);
+
+  // Mark card as opened
+  const card = document.getElementById('se2c' + idx);
+  if (card) card.classList.add('se2-opened');
+
+  // Fill popup content
+  document.getElementById('se2PopupIcon').textContent = data.icon;
+  document.getElementById('se2PopupText').textContent  = data.text;
+
+  // Open popup
+  const popup = document.getElementById('se2Popup');
+  popup.classList.add('open');
+
+  // Count opened cards — show Next after all 4 opened
+  const openedCards = document.querySelectorAll('.se2-card.se2-opened').length;
+  if (openedCards >= SE2_MEMORIES.length) {
+    setTimeout(() => {
+      document.getElementById('se2Next').classList.add('show');
+    }, 600);
+  }
+}
+
+// 3e. Close memory popup
+function closeMemory(e, force) {
+  if (force || !e || e.target.id === 'se2Popup') {
+    document.getElementById('se2Popup').classList.remove('open');
+    se2PlayClickSound();
+  }
+}
+
+// 3f. Init scene sE2
+function initSE2() {
+  // Reset cards
+  document.querySelectorAll('.se2-card').forEach(c => {
+    c.classList.remove('se2-opened', 'se2-visible');
+  });
+  document.getElementById('se2Next').classList.remove('show');
+  document.getElementById('se2Popup').classList.remove('open');
+
+  // Animate cards in with stagger
+  document.querySelectorAll('.se2-card').forEach((c, i) => {
+    setTimeout(() => {
+      c.style.animationDelay = '0s';
+      c.classList.add('se2-visible');
+    }, 300 + i * 150);
+  });
+
+  // Init canvas
+  initCanvas('se2');
+}
 </style>
 </head>
 <body>
@@ -932,8 +1052,8 @@ const ME = (() => {
 // SCENE ENGINE
 // ══════════════════════════════════════════════
 let cur=0;
-const TOTAL=16;
-const SCENE_ID={0:'s0',1:'s1',2:'s2',3:'s3',4:'s4',5:'s5',6:'s6',7:'s7',8:'s8',9:'s9',10:'sA',11:'sB',12:'sC',13:'sD',14:'sE',15:'sF'};
+const TOTAL=17;
+const SCENE_ID={0:'s0',1:'s1',2:'s2',3:'s3',4:'s4',5:'s5',6:'s6',7:'s7',8:'s8',9:'s9',10:'sA',11:'sB',12:'sC',13:'sD',14:'sE2',15:'sE',16:'sF'};
 function sid(n){return SCENE_ID[n]||'s'+n;}
 
 function goTo(n,cinematic=false){
@@ -983,8 +1103,8 @@ function onEnter(n){
   if(n===11)initSB();
   if(n===12)initSC();
   if(n===13)initSD();
-  if(n===14)initSE();
-  if(n===15)initSF();
+  if(n===14)initSE2();
+  if(n===15)initSE();
 }
 
 // Canvas particles
