@@ -254,24 +254,21 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
 .dn-conclusion .dn-em{background:linear-gradient(135deg,#f472b6,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
 
 /* ══════════════════════════════════════
-   SCENE G — ช่วงเวลาพิเศษ (NEW)
+   SCENE G — ช่วงเวลาพิเศษ
 ══════════════════════════════════════ */
 #sG{background:transparent;overflow:hidden}
 
-/* Dark cinematic overlay on top of video */
 .sg-overlay{
   position:absolute;inset:0;z-index:2;pointer-events:none;
   background:linear-gradient(to bottom,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.25) 40%,rgba(0,0,0,0.25) 60%,rgba(0,0,0,0.75) 100%);
 }
 
-/* Dimmer — activated when a card is open */
 .sg-dimmer{
   position:absolute;inset:0;z-index:3;pointer-events:none;
   background:rgba(0,0,0,0);transition:background 0.6s ease;
 }
 .sg-dimmer.dim{background:rgba(0,0,0,0.55);}
 
-/* Top header */
 .sg-header{
   position:relative;z-index:10;text-align:center;
   padding-bottom:16px;
@@ -295,7 +292,6 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
   margin-top:8px;animation:fadeUp 0.9s 0.9s both;
 }
 
-/* Memory card grid */
 .sg-cards{
   position:relative;z-index:10;
   display:grid;grid-template-columns:1fr 1fr;gap:10px;
@@ -319,7 +315,6 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
 .sg-card:nth-child(3){animation-delay:1.5s}
 .sg-card:nth-child(4){animation-delay:1.7s}
 
-/* Shimmer layer */
 .sg-card::before{
   content:'';position:absolute;inset:0;
   background:linear-gradient(135deg,rgba(244,114,182,0.08),rgba(251,191,36,0.04));
@@ -332,7 +327,6 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
 }
 .sg-card.sg-open::before{opacity:1;}
 
-/* Glow orb behind open card */
 .sg-card::after{
   content:'';position:absolute;top:-40%;left:-40%;width:180%;height:180%;
   background:radial-gradient(circle,rgba(244,114,182,0.12) 0%,transparent 65%);
@@ -352,7 +346,6 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
   font-weight:400;color:rgba(255,255,255,0.75);line-height:1.4;display:block;
 }
 
-/* Expanded text */
 .sg-card-body{
   font-family:'Cormorant Garamond',serif;font-style:italic;
   font-size:clamp(0.85rem,3vw,0.95rem);color:rgba(255,255,255,0.62);
@@ -368,7 +361,6 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
   display:block;margin-top:6px;font-size:0.9em;
 }
 
-/* Tap hint */
 .sg-hint-row{
   position:relative;z-index:10;text-align:center;
   font-family:'Sarabun',sans-serif;font-size:0.68rem;
@@ -376,13 +368,10 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
   margin-top:14px;animation:fadeUp 0.8s 2s both;
 }
 
-/* Next button area */
 .sg-next-wrap{
   position:relative;z-index:10;text-align:center;
   margin-top:18px;animation:fadeUp 0.8s 2.2s both;
 }
-
-/* ══════════════════════════════════════ */
 
 /* SCENE E */
 #sE{background:#000;overflow:hidden}
@@ -437,7 +426,6 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
   position:fixed;inset:0;z-index:0;
   pointer-events:none;overflow:hidden;
 }
-/* Slot A/B for crossfade */
 .media-slot{
   position:absolute;inset:0;
   opacity:0;
@@ -586,6 +574,7 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
       <div class="color-card yellow-card" onclick="openColor(2)"><span class="cc-icon">🌼</span><span class="cc-name" style="color:#fde68a">เหลือง</span><div class="cc-word">ความอบอุ่น</div></div>
       <div class="color-card white-card" onclick="openColor(3)"><span class="cc-icon">🤍</span><span class="cc-name" style="color:rgba(255,255,255,0.6)">ขาว</span><div class="cc-word">ความสบายใจ</div></div>
     </div>
+    <!-- Scene 4 now leads to Scene 5 (emotional turn) -->
     <button class="btn btn-dark" onclick="goTo(5)" style="margin-top:8px">ต่อไป →</button>
   </div>
 </section>
@@ -630,6 +619,7 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
     <h1 class="t-title" style="color:rgba(255,255,255,0.85);font-weight:300;font-size:clamp(1.2rem,5vw,1.6rem);margin-bottom:24px;position:relative;z-index:10">เราเลือกกันอีกครั้ง</h1>
     <div class="s7-text" id="s7Text">"ไม่ใช่เพราะมันง่าย<br>แต่เพราะเราเลือกแล้วว่า<br>สิ่งที่มีค่ากว่าอีโก้ คือการมีกัน"</div>
     <div id="s7BtnWrap" style="margin-top:28px;opacity:0;transition:opacity 0.8s;position:relative;z-index:10">
+      <!-- Scene 7 leads to Scene 8 (timeline) -->
       <button class="btn btn-yellow" onclick="goTo(8)">ดูการเดินทางของเรา →</button>
     </div>
   </div>
@@ -646,6 +636,7 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
       <div class="tl-item" id="tl3"><div class="tl-left"><div class="tl-dot" style="background:#64748b;color:#64748b"></div><div class="tl-line"></div></div><div class="tl-right"><div class="tl-label">คืนที่ยาก</div><div class="tl-heading">ลดอีโก้</div><div class="tl-body">เรียนรู้ว่าความรักไม่ใช่การแข่งขัน แต่คือการหาทางอยู่ต่อไปด้วยกัน</div></div></div>
       <div class="tl-item" id="tl4"><div class="tl-left"><div class="tl-dot" style="background:#34d399;color:#34d399"></div><div class="tl-line"></div></div><div class="tl-right"><div class="tl-label">หลังจากนั้น</div><div class="tl-heading">ฟังกันมากขึ้น</div><div class="tl-body">ใจเย็นขึ้น เข้าใจกันมากขึ้น และเริ่มเห็นคุณค่าของการที่ยังอยู่ด้วยกัน</div></div></div>
       <div class="tl-item" id="tl5"><div class="tl-left"><div class="tl-dot" style="background:#f472b6;color:#f472b6;box-shadow:0 0 15px #f472b6"></div></div><div class="tl-right"><div class="tl-label">19 เม.ย. 2569</div><div class="tl-heading" style="color:#f472b6">ครบ 1 ปี — วันนี้</div><div class="tl-body">เลือกกัน ทุกวัน ไม่เคยเปลี่ยนใจ</div></div></div>
+      <!-- Scene 8 leads to Scene 9 (letter) -->
       <div class="s8-next-btn" id="s8NextBtn"><button class="btn btn-pink" onclick="goTo(9)">อ่านจดหมายถึงเธอ →</button></div>
     </div>
   </div>
@@ -666,111 +657,28 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
       <p class="letter-p" id="lp5">และถ้าวันข้างหน้ามีอุปสรรคอีก เค้าก็เชื่อว่าเราจะยังเลือกกันเหมือนเดิม<br>เพราะ <span class="em">สิ่งที่มีค่าที่สุด ไม่ใช่การเป็นคนที่ถูกเสมอไป แต่คือการมีเธออยู่ข้างๆ</span></p>
       <p class="letter-p" id="lp6">เค้ายังอยากให้มันเป็นแบบนั้น ในปีที่สอง และปีต่อๆ ไป 💗</p>
       <div class="letter-sign" id="lsign">ด้วยรักทั้งหมดที่มี 💛</div>
-      <div class="letter-secret-btn" id="letterSecretBtn"><button class="btn btn-pink" onclick="goTo(10)">ต่อไป — บทส่งท้าย →</button></div>
+      <!-- ✅ CHANGED: Scene 9 now leads to Scene 10 = sG (ช่วงเวลาพิเศษ) -->
+      <div class="letter-secret-btn" id="letterSecretBtn"><button class="btn btn-pink" onclick="goTo(10)">ช่วงเวลาพิเศษ →</button></div>
     </div>
-  </div>
-</section>
-
-<!-- SCENE A (10) -->
-<section class="scene" id="sA">
-  <canvas class="bg-canvas" id="cA"></canvas>
-  <div class="box">
-    <p class="t-small" style="color:rgba(255,255,255,0.2);margin-bottom:10px">ทุกวินาที</p>
-    <h2 class="t-title" style="font-weight:300;font-size:clamp(1rem,4vw,1.3rem);color:rgba(255,255,255,0.5);margin-bottom:4px">เราเดินมาด้วยกันแล้ว</h2>
-    <div class="counter-grid-2">
-      <div class="counter-cell"><span class="cn-num" id="cnDays">365</span><span class="cn-label">วัน</span></div>
-      <div class="counter-cell"><span class="cn-num" id="cnHours">00</span><span class="cn-label">ชั่วโมง</span></div>
-      <div class="counter-cell"><span class="cn-num" id="cnMins">00</span><span class="cn-label">นาที</span></div>
-      <div class="counter-cell"><span class="cn-num" id="cnSecs">00</span><span class="cn-label">วินาที</span></div>
-    </div>
-    <p class="counter-tagline">"และทุกวินาที<br>เค้าก็ยัง<span class="ct-em">เลือกเธออยู่</span>"</p>
-    <br><button class="btn btn-pink" onclick="goTo(11)" style="margin-top:16px">ต่อไป →</button>
-  </div>
-</section>
-
-<!-- SCENE B (11) -->
-<section class="scene" id="sB">
-  <canvas class="bg-canvas" id="cB"></canvas>
-  <div class="box">
-    <p class="t-small" style="color:rgba(244,114,182,0.35);margin-bottom:12px">ถามเธอ</p>
-    <h2 class="t-title" style="font-weight:300;color:rgba(255,255,255,0.75);font-size:clamp(1rem,4vw,1.25rem);line-height:1.8;margin-bottom:6px">ถ้าย้อนกลับไปคืนวันนั้น<br>เธอจะเลือกอะไร?</h2>
-    <div class="lp-choices">
-      <button class="lp-btn" onclick="choosePath(this)"><span class="lp-em">🤗</span>กอดกันเงียบๆ</button>
-      <button class="lp-btn" onclick="choosePath(this)"><span class="lp-em">💬</span>พูดว่า "มาปรับกันนะ"</button>
-      <button class="lp-btn" onclick="choosePath(this)"><span class="lp-em">⚡</span>เถียงให้จบไปเลย</button>
-      <button class="lp-btn" onclick="choosePath(this)"><span class="lp-em">🚪</span>เดินออกไปก่อน</button>
-    </div>
-  </div>
-  <div class="lp-result" id="lpResult">
-    <div class="lp-result-inner">
-      <div style="font-size:3rem;margin-bottom:16px">💗</div>
-      <div class="lp-result-quote">"สุดท้าย<br>เราก็ยัง<span class="lp-highlight">เลือกกัน</span>"</div>
-      <p class="t-caption" style="color:rgba(255,255,255,0.4);margin-bottom:32px">ไม่ว่าจะเดินทางมายังไง<br>ปลายทางยังเป็นเราอยู่เสมอ</p>
-      <button class="btn btn-pink" onclick="closeLpResult()">ต่อไป →</button>
-    </div>
-  </div>
-</section>
-
-<!-- SCENE C (12) -->
-<section class="scene" id="sC">
-  <div class="sc-scroll" id="sCScroll" ontouchstart="">
-    <div class="sc-inner">
-      <div class="sc-header"><span>บทสารภาพ</span>สิ่งที่เค้าไม่เคยพูดออกไป</div>
-      <p class="sc-p" id="scp0">มีหลายอย่างที่เค้าไม่ได้พูด ไม่ใช่เพราะไม่รู้สึก แต่เพราะบางความรู้สึกมันลึกเกินกว่าจะพูดออกมาได้ง่ายๆ</p>
-      <p class="sc-p" id="scp1"><span class="sc-em">เค้ากลัวเสียเธอมากกว่าที่แสดงออกเสมอ</span><br>แต่เค้าไม่ใช่คนที่เก่งเรื่องการแสดงความกลัว บางครั้งเค้าเลยเลือกทำตัวนิ่งๆ ทำเหมือนไม่เป็นอะไร ทั้งที่ข้างในมันสั่นไปหมด</p>
-      <p class="sc-p" id="scp2">เค้าไม่ได้ไม่แคร์<br>เค้าแค่ไม่อยากให้เธอเห็นว่าเธอสำคัญกับเค้ามากแค่ไหน เพราะการยอมรับว่ากลัวเสียใครสักคน มันคือการยอมรับว่าเขามีอิทธิพลต่อหัวใจเรามากจริงๆ</p>
-      <div class="sc-divider"></div>
-      <p class="sc-p" id="scp3">บางวันที่เค้าดูนิ่ง ดูเฉย หรือเหมือนถอยออกมา จริงๆ แล้วเค้ากำลังพยายามอยู่<br><span class="sc-em">พยายามควบคุมอารมณ์ พยายามคิดก่อนพูด พยายามไม่ให้คำพูดชั่ววูบทำร้ายเธอ</span></p>
-      <p class="sc-p" id="scp4">บางครั้งความเงียบของเค้าไม่ใช่การเมิน<br>แต่มันคือการเลือกที่จะไม่ทำให้ทุกอย่างแย่ลงไปกว่าเดิม</p>
-      <div class="sc-divider"></div>
-      <p class="sc-p" id="scp5">เค้าอาจไม่ได้พูดคำหวานเก่งทุกวัน แต่ทุกการตัดสินใจของเค้า <span class="sc-gold">มีเธออยู่ในนั้นเสมอ</span><br>ทุกแผนในอนาคต ต่อให้เล็กแค่ไหน เค้าก็เผลอคิดว่า "ถ้าเธออยู่ตรงนี้จะเป็นยังไงนะ"</p>
-      <p class="sc-p" id="scp6">และคืนนั้น… คืนที่คำว่า "เลิก" ถูกพูดออกมาเบาๆ<br>เค้ากลัวว่ามันจะเป็นครั้งสุดท้ายจริงๆ กลัวว่าพรุ่งนี้จะตื่นขึ้นมาโดยไม่มีเธอ กลัวว่าความเคยชินที่อบอุ่นจะกลายเป็นความว่างเปล่า</p>
-      <p class="sc-p" id="scp7">ตอนที่เรานอนเงียบๆ ข้างกัน เค้าไม่ได้แค่เสียใจ แต่เค้ากำลังจินตนาการ<span class="sc-em">ชีวิตที่ไม่มีเธออยู่ในนั้น</span> และมันเป็นภาพที่เค้าไม่อยากให้เกิดขึ้นเลย</p>
-      <div class="sc-divider"></div>
-      <p class="sc-p" id="scp8">เค้าไม่ได้อยากเป็นคนที่ชนะ<br><span class="sc-gold">เค้าแค่อยากเป็นคนที่ยังมีเธออยู่ข้างๆ</span></p>
-      <p class="sc-p" id="scp9">สิ่งที่เค้าไม่เคยพูดออกไปชัดๆ ก็คือ<br><span class="sc-em">เค้ากลัวเสียเธอ มากกว่าที่เค้าเคยกลัวเสียอะไรในชีวิต</span></p>
-      <p class="sc-p" id="scp10">และถ้าวันไหนเค้าดูนิ่ง ดูแข็ง หรือดูไม่แสดงออก อยากให้เธอรู้ว่า ข้างในมันมีความพยายาม มีความรัก และมีความกลัวที่จะเสียเธออยู่เสมอ</p>
-      <p class="sc-p" id="scp11">แค่บางทีเค้าไม่เก่งพอที่จะพูดมันออกมา<br><span class="sc-gold">แต่วันนี้ เค้าอยากให้เธอรู้ทั้งหมดแล้ว 💗</span></p>
-      <div class="sc-next-btn" id="sCNextBtn"><button class="btn btn-pink" onclick="goTo(13)">ต่อไป →</button></div>
-    </div>
-  </div>
-</section>
-
-<!-- SCENE D (13) -->
-<section class="scene" id="sD">
-  <canvas class="bg-canvas" id="cD"></canvas>
-  <div class="box">
-    <p class="t-small" style="color:rgba(255,255,255,0.2);margin-bottom:12px">ก่อน — หลัง</p>
-    <h2 class="t-title" style="font-weight:300;color:rgba(255,255,255,0.6);font-size:clamp(1rem,4vw,1.2rem);margin-bottom:16px">ความรักที่โตขึ้น</h2>
-    <div class="dn-split">
-      <div class="dn-side dn-left"><span class="dn-label">วันแรก</span><span class="dn-icon">⚡</span><span class="dn-item">ตื่นเต้น หวาน</span><span class="dn-item">ใจเต้นแรง</span><span class="dn-item">รออ่านข้อความ</span><span class="dn-item">ทุกอย่างใหม่</span><span class="dn-item">กลัวจะเสียเธอ</span></div>
-      <div class="dn-side dn-right"><span class="dn-label">วันนี้</span><span class="dn-icon">🌙</span><span class="dn-item">สบายใจ มั่นคง</span><span class="dn-item">เข้าใจกัน</span><span class="dn-item">รู้ว่าเธอยังอยู่</span><span class="dn-item">ทุกอย่างคุ้นเคย</span><span class="dn-item">รู้ว่าสำคัญ</span></div>
-    </div>
-    <p class="dn-conclusion">"ความรักของเราไม่ได้ลดลง<br>มันแค่<span class="dn-em">โตขึ้น</span>"</p>
-    <button class="btn btn-pink" onclick="goTo(14)">ช่วงเวลาพิเศษ →</button>
   </div>
 </section>
 
 <!-- ══════════════════════════════════════════
-     SCENE G (14) — ช่วงเวลาพิเศษ  [NEW]
+     SCENE G — ช่วงเวลาพิเศษ [index 10]
 ══════════════════════════════════════════ -->
 <section class="scene" id="sG">
-  <!-- Cinematic overlays -->
   <div class="sg-overlay"></div>
   <div class="sg-dimmer" id="sgDimmer"></div>
   <canvas class="bg-canvas" id="cG" style="opacity:0.15"></canvas>
 
   <div class="box" style="padding:0 4px">
-    <!-- Header -->
     <div class="sg-header">
       <span class="sg-eyebrow">ความทรงจำ · Memories</span>
       <h1 class="sg-title">ช่วงเวลาพิเศษ<br><span style="font-size:0.55em;letter-spacing:0.18em;color:rgba(255,255,255,0.4)">ของเรา</span></h1>
       <p class="sg-sub">"ทุกช่วงเวลาเล็กๆ<br>คือสิ่งที่เค้าจำไว้มากที่สุด"</p>
     </div>
 
-    <!-- Memory cards -->
     <div class="sg-cards" id="sgCards">
-
       <div class="sg-card" id="sgCard0" onclick="toggleSgCard(0)">
         <span class="sg-card-icon">🌅</span>
         <span class="sg-card-label">ช่วงแรก</span>
@@ -810,19 +718,101 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
           <span class="sg-card-quote">"ยังอยากเลือกเธออยู่เสมอ 💛"</span>
         </div>
       </div>
-
     </div>
 
     <p class="sg-hint-row">แตะ card เพื่อเปิดความทรงจำ ✨</p>
 
     <div class="sg-next-wrap">
-      <button class="btn btn-pink" onclick="goTo(15)">ดู Credits →</button>
+      <!-- ✅ CHANGED: sG now leads to Scene 11 = sA (counter) -->
+      <button class="btn btn-pink" onclick="goTo(11)">ทุกวินาทีที่อยู่ด้วยกัน →</button>
     </div>
   </div>
 </section>
-<!-- ══════════════════════════════════════════ -->
 
-<!-- SCENE E (15) -->
+<!-- SCENE A (index 11) -->
+<section class="scene" id="sA">
+  <canvas class="bg-canvas" id="cA"></canvas>
+  <div class="box">
+    <p class="t-small" style="color:rgba(255,255,255,0.2);margin-bottom:10px">ทุกวินาที</p>
+    <h2 class="t-title" style="font-weight:300;font-size:clamp(1rem,4vw,1.3rem);color:rgba(255,255,255,0.5);margin-bottom:4px">เราเดินมาด้วยกันแล้ว</h2>
+    <div class="counter-grid-2">
+      <div class="counter-cell"><span class="cn-num" id="cnDays">365</span><span class="cn-label">วัน</span></div>
+      <div class="counter-cell"><span class="cn-num" id="cnHours">00</span><span class="cn-label">ชั่วโมง</span></div>
+      <div class="counter-cell"><span class="cn-num" id="cnMins">00</span><span class="cn-label">นาที</span></div>
+      <div class="counter-cell"><span class="cn-num" id="cnSecs">00</span><span class="cn-label">วินาที</span></div>
+    </div>
+    <p class="counter-tagline">"และทุกวินาที<br>เค้าก็ยัง<span class="ct-em">เลือกเธออยู่</span>"</p>
+    <!-- ✅ CHANGED: sA now leads to Scene 12 = sB -->
+    <br><button class="btn btn-pink" onclick="goTo(12)" style="margin-top:16px">ถ้าย้อนกลับไปได้… →</button>
+  </div>
+</section>
+
+<!-- SCENE B (index 12) -->
+<section class="scene" id="sB">
+  <canvas class="bg-canvas" id="cB"></canvas>
+  <div class="box">
+    <p class="t-small" style="color:rgba(244,114,182,0.35);margin-bottom:12px">ถามเธอ</p>
+    <h2 class="t-title" style="font-weight:300;color:rgba(255,255,255,0.75);font-size:clamp(1rem,4vw,1.25rem);line-height:1.8;margin-bottom:6px">ถ้าย้อนกลับไปคืนวันนั้น<br>เธอจะเลือกอะไร?</h2>
+    <div class="lp-choices">
+      <button class="lp-btn" onclick="choosePath(this)"><span class="lp-em">🤗</span>กอดกันเงียบๆ</button>
+      <button class="lp-btn" onclick="choosePath(this)"><span class="lp-em">💬</span>พูดว่า "มาปรับกันนะ"</button>
+      <button class="lp-btn" onclick="choosePath(this)"><span class="lp-em">⚡</span>เถียงให้จบไปเลย</button>
+      <button class="lp-btn" onclick="choosePath(this)"><span class="lp-em">🚪</span>เดินออกไปก่อน</button>
+    </div>
+  </div>
+  <div class="lp-result" id="lpResult">
+    <div class="lp-result-inner">
+      <div style="font-size:3rem;margin-bottom:16px">💗</div>
+      <div class="lp-result-quote">"สุดท้าย<br>เราก็ยัง<span class="lp-highlight">เลือกกัน</span>"</div>
+      <p class="t-caption" style="color:rgba(255,255,255,0.4);margin-bottom:32px">ไม่ว่าจะเดินทางมายังไง<br>ปลายทางยังเป็นเราอยู่เสมอ</p>
+      <button class="btn btn-pink" onclick="closeLpResult()">ต่อไป →</button>
+    </div>
+  </div>
+</section>
+
+<!-- SCENE C (index 13) -->
+<section class="scene" id="sC">
+  <div class="sc-scroll" id="sCScroll" ontouchstart="">
+    <div class="sc-inner">
+      <div class="sc-header"><span>บทสารภาพ</span>สิ่งที่เค้าไม่เคยพูดออกไป</div>
+      <p class="sc-p" id="scp0">มีหลายอย่างที่เค้าไม่ได้พูด ไม่ใช่เพราะไม่รู้สึก แต่เพราะบางความรู้สึกมันลึกเกินกว่าจะพูดออกมาได้ง่ายๆ</p>
+      <p class="sc-p" id="scp1"><span class="sc-em">เค้ากลัวเสียเธอมากกว่าที่แสดงออกเสมอ</span><br>แต่เค้าไม่ใช่คนที่เก่งเรื่องการแสดงความกลัว บางครั้งเค้าเลยเลือกทำตัวนิ่งๆ ทำเหมือนไม่เป็นอะไร ทั้งที่ข้างในมันสั่นไปหมด</p>
+      <p class="sc-p" id="scp2">เค้าไม่ได้ไม่แคร์<br>เค้าแค่ไม่อยากให้เธอเห็นว่าเธอสำคัญกับเค้ามากแค่ไหน เพราะการยอมรับว่ากลัวเสียใครสักคน มันคือการยอมรับว่าเขามีอิทธิพลต่อหัวใจเรามากจริงๆ</p>
+      <div class="sc-divider"></div>
+      <p class="sc-p" id="scp3">บางวันที่เค้าดูนิ่ง ดูเฉย หรือเหมือนถอยออกมา จริงๆ แล้วเค้ากำลังพยายามอยู่<br><span class="sc-em">พยายามควบคุมอารมณ์ พยายามคิดก่อนพูด พยายามไม่ให้คำพูดชั่ววูบทำร้ายเธอ</span></p>
+      <p class="sc-p" id="scp4">บางครั้งความเงียบของเค้าไม่ใช่การเมิน<br>แต่มันคือการเลือกที่จะไม่ทำให้ทุกอย่างแย่ลงไปกว่าเดิม</p>
+      <div class="sc-divider"></div>
+      <p class="sc-p" id="scp5">เค้าอาจไม่ได้พูดคำหวานเก่งทุกวัน แต่ทุกการตัดสินใจของเค้า <span class="sc-gold">มีเธออยู่ในนั้นเสมอ</span><br>ทุกแผนในอนาคต ต่อให้เล็กแค่ไหน เค้าก็เผลอคิดว่า "ถ้าเธออยู่ตรงนี้จะเป็นยังไงนะ"</p>
+      <p class="sc-p" id="scp6">และคืนนั้น… คืนที่คำว่า "เลิก" ถูกพูดออกมาเบาๆ<br>เค้ากลัวว่ามันจะเป็นครั้งสุดท้ายจริงๆ กลัวว่าพรุ่งนี้จะตื่นขึ้นมาโดยไม่มีเธอ กลัวว่าความเคยชินที่อบอุ่นจะกลายเป็นความว่างเปล่า</p>
+      <p class="sc-p" id="scp7">ตอนที่เรานอนเงียบๆ ข้างกัน เค้าไม่ได้แค่เสียใจ แต่เค้ากำลังจินตนาการ<span class="sc-em">ชีวิตที่ไม่มีเธออยู่ในนั้น</span> และมันเป็นภาพที่เค้าไม่อยากให้เกิดขึ้นเลย</p>
+      <div class="sc-divider"></div>
+      <p class="sc-p" id="scp8">เค้าไม่ได้อยากเป็นคนที่ชนะ<br><span class="sc-gold">เค้าแค่อยากเป็นคนที่ยังมีเธออยู่ข้างๆ</span></p>
+      <p class="sc-p" id="scp9">สิ่งที่เค้าไม่เคยพูดออกไปชัดๆ ก็คือ<br><span class="sc-em">เค้ากลัวเสียเธอ มากกว่าที่เค้าเคยกลัวเสียอะไรในชีวิต</span></p>
+      <p class="sc-p" id="scp10">และถ้าวันไหนเค้าดูนิ่ง ดูแข็ง หรือดูไม่แสดงออก อยากให้เธอรู้ว่า ข้างในมันมีความพยายาม มีความรัก และมีความกลัวที่จะเสียเธออยู่เสมอ</p>
+      <p class="sc-p" id="scp11">แค่บางทีเค้าไม่เก่งพอที่จะพูดมันออกมา<br><span class="sc-gold">แต่วันนี้ เค้าอยากให้เธอรู้ทั้งหมดแล้ว 💗</span></p>
+      <!-- ✅ CHANGED: sC now leads to Scene 14 = sD -->
+      <div class="sc-next-btn" id="sCNextBtn"><button class="btn btn-pink" onclick="goTo(14)">ต่อไป →</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- SCENE D (index 14) -->
+<section class="scene" id="sD">
+  <canvas class="bg-canvas" id="cD"></canvas>
+  <div class="box">
+    <p class="t-small" style="color:rgba(255,255,255,0.2);margin-bottom:12px">ก่อน — หลัง</p>
+    <h2 class="t-title" style="font-weight:300;color:rgba(255,255,255,0.6);font-size:clamp(1rem,4vw,1.2rem);margin-bottom:16px">ความรักที่โตขึ้น</h2>
+    <div class="dn-split">
+      <div class="dn-side dn-left"><span class="dn-label">วันแรก</span><span class="dn-icon">⚡</span><span class="dn-item">ตื่นเต้น หวาน</span><span class="dn-item">ใจเต้นแรง</span><span class="dn-item">รออ่านข้อความ</span><span class="dn-item">ทุกอย่างใหม่</span><span class="dn-item">กลัวจะเสียเธอ</span></div>
+      <div class="dn-side dn-right"><span class="dn-label">วันนี้</span><span class="dn-icon">🌙</span><span class="dn-item">สบายใจ มั่นคง</span><span class="dn-item">เข้าใจกัน</span><span class="dn-item">รู้ว่าเธอยังอยู่</span><span class="dn-item">ทุกอย่างคุ้นเคย</span><span class="dn-item">รู้ว่าสำคัญ</span></div>
+    </div>
+    <p class="dn-conclusion">"ความรักของเราไม่ได้ลดลง<br>มันแค่<span class="dn-em">โตขึ้น</span>"</p>
+    <!-- ✅ CHANGED: sD now leads to Scene 15 = sE (credits) -->
+    <button class="btn btn-pink" onclick="goTo(15)">ดู Credits →</button>
+  </div>
+</section>
+
+<!-- SCENE E (index 15) -->
 <section class="scene" id="sE">
   <canvas class="bg-canvas" id="cE"></canvas>
   <div class="credits-wrap">
@@ -843,10 +833,11 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
       <div style="height:80px"></div>
     </div>
   </div>
+  <!-- ✅ leads to Scene 16 = sF (secret) — same as before -->
   <div class="credits-next" id="creditsNext"><button class="btn btn-dark" onclick="goTo(16)">💌 &nbsp;ข้อความลับ</button></div>
 </section>
 
-<!-- SCENE F (16) -->
+<!-- SCENE F (index 16) -->
 <section class="scene" id="sF">
   <canvas class="bg-canvas" id="cF"></canvas>
   <div class="box">
@@ -1019,23 +1010,29 @@ const AM = (() => {
       document.getElementById('soundToggle').textContent='🔊';
       load().then(()=>this.handleScene(cur));
     },
+    // ✅ UPDATED: Audio mapping for new scene order
+    // New indices: 0-4=opening, 5=emotional rain, 6=rain peak, 7-9=warm/letter
+    // 10=sG special (track1 soft), 11=sA counter, 12=sB choose, 13=sC confession
+    // 14=sD growth, 15=sE credits, 16=sF secret
     handleScene(n){
       if(!unlocked)return;
-      // Scene 0–4: Track 0
+      // Scene 0–4: Track 0 (opening / sweet)
       if(n>=0&&n<=4){stopRain(1500);if(curTrack!==0)crossfade(0,2000);return;}
-      // Scene 5: rain starts, music fades
+      // Scene 5: rain starts, music fades (same as before)
       if(n===5){if(!rainActive)startRain(2000);stopMusic(2000);return;}
-      // Scene 6: rain + track2 one-shot
+      // Scene 6: rain + track2 (same as before)
       if(n===6){
         if(!rainActive)startRain(1500);
         if(curTrack!==2){stopMusic(1500);setTimeout(()=>play(2,1.5),1800);}
         return;
       }
-      // Scene 7–13: Track 1
-      if(n>=7&&n<=13){stopRain(2000);if(curTrack!==1)crossfade(1,2000);return;}
-      // Scene 14 (sG special moments): continue track 1 softly
-      if(n===14){stopRain(1500);if(curTrack!==1)crossfade(1,2000);return;}
-      // Scene 15+: Track 3 fade out gradually
+      // Scene 7–10: Track 1 (warm, hopeful — covers timeline, letter, special memories)
+      if(n>=7&&n<=10){stopRain(2000);if(curTrack!==1)crossfade(1,2000);return;}
+      // Scene 11 (sA counter): Track 1 continues, slightly fade
+      if(n===11){stopRain(1500);if(curTrack!==1)crossfade(1,2000);return;}
+      // Scene 12–14: Track 1 continues through choose, confession, growth
+      if(n>=12&&n<=14){stopRain(1500);if(curTrack!==1)crossfade(1,2000);return;}
+      // Scene 15+ (credits, secret): Track 3 fading out
       if(n>=15){
         stopRain(1500);
         if(curTrack!==3){
@@ -1067,15 +1064,17 @@ function handleFirstUnlock(){AM.unlock();}
 function toggleSound(){AM.toggleMute();}
 
 // ══════════════════════════════════════════════
-// MEDIA ENGINE — declared BEFORE scene engine
+// MEDIA ENGINE
 // ══════════════════════════════════════════════
 const ME = (() => {
+  // ✅ UPDATED: Media scene map uses new index numbers
+  // index 10 = sG (was 14 before), uses special.mp4
   const SCENE_MEDIA = {
     0:  { type:'slideshow', speed:2800, mode:'normal', imgs:['mem_01.jpg'] },
     2:  { type:'slideshow', speed:2500, mode:'normal', imgs:['1.jpg','2.jpg','3.jpg'] },
     3:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
     4:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
-    14: { type:'video', mode:'normal', src:'special.mp4', fallback:'Scene 3.MOV' },  /* NEW: Scene G */
+    10: { type:'video', mode:'normal', src:'special.mp4', fallback:'Scene 3.MOV' },  // sG at new index 10
   };
   let slotActive='A', slideshowTimer=null, slideIndex=0, currentVideo=null;
   const preloaded={};
@@ -1091,7 +1090,6 @@ const ME = (() => {
     const v=document.createElement('video');
     v.muted=true;v.playsInline=true;v.autoplay=false;v.loop=true;
     v.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.68) contrast(1.05)';
-    // Support .mov with mp4/webm fallback for cross-browser compatibility
     const base=src.replace(/\.(mov|mp4|webm)$/i,'');
     const ext=(src.match(/\.(mov|mp4|webm)$/i)||['',src])[1].toLowerCase();
     const pairs = ext==='mov'
@@ -1156,54 +1154,43 @@ const ME = (() => {
 })();
 
 // ══════════════════════════════════════════════
-// HELPERS — shared utilities
+// HELPERS
 // ══════════════════════════════════════════════
-
-// Mobile detection (used for particle count, rain drops)
 const IS_MOBILE = window.innerWidth < 768;
-
-// Safe getElementById shorthand
 const $=id=>document.getElementById(id);
 
-// Animate a list of elements by adding a class with staggered delay
-// Returns total delay so callers can chain
-function staggerReveal(els, cls, baseDelay, step){
-  els.forEach((el,i)=>{
-    el.classList.remove(cls);
-    setTimeout(()=>el.classList.add(cls), baseDelay + i*step);
-  });
-  return baseDelay + els.length*step;
-}
-
-// Bind a touchmove stopper on a scroll container only once (prevents memory leak)
 function bindScrollFix(el){
   if(!el||el.dataset.scrollFixed)return;
   el.dataset.scrollFixed='1';
   el.addEventListener('touchmove',e=>e.stopPropagation(),{passive:true});
 }
 
-// Reveal staggered .letter-p / .sc-p style paragraphs, return total ms
-function revealParas(selector, baseDelay, step, container){
-  const ps=(container||document).querySelectorAll(selector);
-  ps.forEach((p,i)=>{p.classList.remove('visible');setTimeout(()=>p.classList.add('visible'),baseDelay+i*step);});
-  return baseDelay + ps.length*step;
-}
-
 // ══════════════════════════════════════════════
 // SCENE ENGINE
 // ══════════════════════════════════════════════
 let cur=0;
-let transitioning=false; // FIX: prevent rapid scene tapping
+let transitioning=false;
 const TOTAL=17;
+
+// ✅ UPDATED SCENE_ID — New cinematic order:
+// 0→s0, 1→s1, 2→s2, 3→s3, 4→s4, 5→s5, 6→s6, 7→s7, 8→s8, 9→s9
+// 10→sG (ช่วงเวลาพิเศษ), 11→sA (counter), 12→sB (choose), 13→sC (confession), 14→sD (before/after)
+// 15→sE (credits), 16→sF (secret)
 const SCENE_ID={
-  0:'s0',1:'s1',2:'s2',3:'s3',4:'s4',5:'s5',6:'s6',
-  7:'s7',8:'s8',9:'s9',10:'sA',11:'sB',12:'sC',13:'sD',
-  14:'sG',15:'sE',16:'sF'
+  0:'s0', 1:'s1', 2:'s2', 3:'s3', 4:'s4',
+  5:'s5', 6:'s6', 7:'s7', 8:'s8', 9:'s9',
+  10:'sG',  // ช่วงเวลาพิเศษ — moved here after letter for emotional peak
+  11:'sA',  // counter
+  12:'sB',  // choose path
+  13:'sC',  // confession
+  14:'sD',  // before/after
+  15:'sE',  // credits
+  16:'sF'   // secret letter
 };
 function sid(n){return SCENE_ID[n]||'s'+n;}
 
 function goTo(n,cinematic=false){
-  if(n===cur||transitioning)return; // FIX: lock during transition
+  if(n===cur||transitioning)return;
   transitioning=true;
   vibrate(25);
   ME.leaveScene(cur);
@@ -1219,7 +1206,7 @@ function goTo(n,cinematic=false){
     nx.classList.add('active');
     nx.style.animation='none';void nx.offsetWidth;nx.style.animation='';
     nx.classList.add('fade-in');
-    setTimeout(()=>{nx.classList.remove('fade-in');transitioning=false;},700); // unlock after anim
+    setTimeout(()=>{nx.classList.remove('fade-in');transitioning=false;},700);
     onEnter(n);
   };
   if(cinematic){
@@ -1234,13 +1221,18 @@ function updateProgress(n){
   $('sceneCounter').textContent=(n+1)+' / '+TOTAL;
 }
 
-// Scene init dispatch table — cleaner than if-chain
+// ✅ UPDATED: Scene init dispatch uses new index numbers
 const SCENE_INITS={
   1:()=>initS1(), 2:()=>initS2(), 3:()=>initS3(),
   5:()=>initS5(), 6:()=>initS6Rain(), 7:()=>initS7(),
-  8:()=>initS8(), 9:()=>initS9(), 10:()=>initSA(),
-  11:()=>initSB(), 12:()=>initSC(), 13:()=>initSD(),
-  14:()=>initSG(), 15:()=>initSE(), 16:()=>initSF()
+  8:()=>initS8(), 9:()=>initS9(),
+  10:()=>initSG(),   // sG at index 10
+  11:()=>initSA(),   // sA at index 11
+  12:()=>initSB(),   // sB at index 12
+  13:()=>initSC(),   // sC at index 13
+  14:()=>initSD(),   // sD at index 14
+  15:()=>initSE(),   // sE at index 15
+  16:()=>initSF()    // sF at index 16
 };
 
 function onEnter(n){
@@ -1255,13 +1247,19 @@ function onEnter(n){
 // ══════════════════════════════════════════════
 const canvasInits={};
 function initCanvas(n){
-  const ids={0:'c0',1:'c1',2:'c2',3:'c3',4:'c4',5:'c5',7:'c7',10:'cA',11:'cB',13:'cD',14:'cG',15:'cE',16:'cF'};
+  // ✅ UPDATED: canvas IDs mapped to new scene indices
+  const ids={0:'c0',1:'c1',2:'c2',3:'c3',4:'c4',5:'c5',7:'c7',
+             10:'cG',  // sG
+             11:'cA',  // sA
+             12:'cB',  // sB
+             14:'cD',  // sD
+             15:'cE',  // sE
+             16:'cF'}; // sF
   if(!ids[n]||canvasInits[n])return;
   canvasInits[n]=true;
   const cv=$(ids[n]);if(!cv)return;
   const ctx=cv.getContext('2d');
   cv.width=window.innerWidth;cv.height=window.innerHeight;
-  // FIX: fewer particles on mobile for better performance
   const count=n===0?(IS_MOBILE?70:150):(IS_MOBILE?35:80);
   const palette=n===0
     ?['rgba(244,114,182,','rgba(251,191,36,','rgba(147,197,253,']
@@ -1272,11 +1270,9 @@ function initCanvas(n){
     dx:(Math.random()-.5)*.25, dy:-Math.random()*.3-.05,
     op:Math.random()*.4+.1, dop:(Math.random()-.5)*.015
   }));
-  // FIX: cache palette index per particle — avoid random() per frame per particle
   pts.forEach(p=>p.ci=Math.floor(Math.random()*palette.length));
-  let rafId=null;
   function draw(){
-    rafId=requestAnimationFrame(draw);
+    requestAnimationFrame(draw);
     ctx.clearRect(0,0,cv.width,cv.height);
     pts.forEach(p=>{
       ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
@@ -1293,7 +1289,7 @@ function initCanvas(n){
 initCanvas(0);
 
 // ══════════════════════════════════════════════
-// SCENE INITS
+// SCENE INITS (internal logic unchanged)
 // ══════════════════════════════════════════════
 
 function initS1(){
@@ -1351,7 +1347,6 @@ function initS5(){
 
 function initS6Rain(){
   const rain=$('s6Rain');rain.innerHTML='';
-  // FIX: fewer rain drops on mobile
   const dropCount=IS_MOBILE?30:60;
   for(let i=0;i<dropCount;i++){
     const d=document.createElement('div');d.className='rain-drop';
@@ -1377,7 +1372,7 @@ function initS8(){
     el.classList.remove('visible');setTimeout(()=>el.classList.add('visible'),300+i*300);
   });
   setTimeout(()=>$('s8NextBtn').classList.add('show'),300+6*300+400);
-  bindScrollFix($('s8Scroll')); // FIX: bind once only
+  bindScrollFix($('s8Scroll'));
 }
 
 function initS9(){
@@ -1386,7 +1381,7 @@ function initS9(){
   const sign=$('lsign');sign.classList.remove('visible');
   setTimeout(()=>sign.classList.add('visible'),400+paras.length*700);
   setTimeout(()=>$('letterSecretBtn').classList.add('show'),400+(paras.length+1)*700);
-  bindScrollFix($('s9Scroll')); // FIX: bind once only
+  bindScrollFix($('s9Scroll'));
 }
 
 function startCelebration(){
@@ -1441,7 +1436,7 @@ if(document.readyState==='complete'||document.readyState==='interactive'){
 }
 
 // ══════════════════════════════════════════════
-// COUNTER (Scene A)
+// COUNTER (Scene A = index 11)
 // ══════════════════════════════════════════════
 const COUPLE_DATE=new Date('2025-04-19T00:00:00');
 let ctrInterval=null,prevCtr={};
@@ -1462,7 +1457,8 @@ function setCN(id,val){
 }
 
 // ══════════════════════════════════════════════
-// SCENE B — choose path
+// SCENE B — choose path (index 12)
+// ✅ closeLpResult now goes to Scene 13 = sC
 // ══════════════════════════════════════════════
 function initSB(){$('lpResult').classList.remove('show');}
 function choosePath(btn){
@@ -1471,22 +1467,26 @@ function choosePath(btn){
   btn.style.background='rgba(244,114,182,0.08)';
   setTimeout(()=>{$('lpResult').classList.add('show');spawnHearts(8);},400);
 }
-function closeLpResult(){$('lpResult').classList.remove('show');goTo(12);}
+function closeLpResult(){
+  $('lpResult').classList.remove('show');
+  // ✅ CHANGED: was goTo(12), now goes to index 13 = sC
+  goTo(13);
+}
 
 // ══════════════════════════════════════════════
-// SCENE C — confession
+// SCENE C — confession (index 13)
 // ══════════════════════════════════════════════
 function initSC(){
   const ps=document.querySelectorAll('.sc-p');
   ps.forEach((p,i)=>{p.classList.remove('visible');setTimeout(()=>p.classList.add('visible'),300+i*500);});
   setTimeout(()=>$('sCNextBtn').classList.add('show'),300+ps.length*500+300);
-  bindScrollFix($('sCScroll')); // FIX: bind once only
+  bindScrollFix($('sCScroll'));
 }
 
 function initSD(){}
 
 // ══════════════════════════════════════════════
-// SCENE E — credits
+// SCENE E — credits (index 15)
 // ══════════════════════════════════════════════
 function initSE(){
   const inner=$('creditsInner');
@@ -1496,14 +1496,13 @@ function initSE(){
 }
 
 // ══════════════════════════════════════════════
-// SCENE F — secret code input
+// SCENE F — secret code (index 16)
 // ══════════════════════════════════════════════
 function initSF(){
   const inp=$('sfInput');
   inp.value='';inp.classList.remove('err','ok');
   $('sfLock').classList.remove('unlocked');$('sfLock').textContent='🔒';
   $('secretLetterOverlay').classList.remove('open');
-  // FIX: autofocus input when entering scene
   setTimeout(()=>{try{inp.focus();}catch(e){}},400);
 }
 
@@ -1513,7 +1512,6 @@ function checkSfCode(inp){
     inp.classList.add('ok');
     $('sfLock').classList.add('unlocked');$('sfLock').textContent='🔓';
     vibrate([30,30,80]);
-    // FIX: play letter-open sound effect
     playToneChime(520,1040,0.6);
     setTimeout(()=>openSecretLetter(),700);
   }else if(inp.value.length===8){
@@ -1530,7 +1528,7 @@ function openSecretLetter(){
   const sign=$('slSign');sign.classList.remove('visible');
   setTimeout(()=>sign.classList.add('visible'),400+ps.length*650);
   setTimeout(()=>$('slCelebBtn').classList.add('show'),400+(ps.length+1)*650);
-  bindScrollFix(ov); // FIX: bind once only
+  bindScrollFix(ov);
 }
 
 let _kb='';
@@ -1540,10 +1538,9 @@ document.addEventListener('keydown',e=>{
 });
 
 // ══════════════════════════════════════════════
-// SCENE G — ช่วงเวลาพิเศษ
+// SCENE G — ช่วงเวลาพิเศษ (index 10)
 // ══════════════════════════════════════════════
 
-// FIX: singleton AudioContext for card sounds — no new context per tap
 const _sfxCtx=(()=>{
   let _ac=null;
   return {
@@ -1557,7 +1554,6 @@ const _sfxCtx=(()=>{
   };
 })();
 
-// Reusable tone helper (used for card sounds AND letter-open sound)
 function playToneChime(freqFrom, freqTo, duration, vol=0.07){
   const ac=_sfxCtx.get();if(!ac)return;
   const o=ac.createOscillator(),g=ac.createGain();
@@ -1609,8 +1605,6 @@ function initSG(){
   if(dimmer)dimmer.classList.remove('dim');
   _sgOpenCard=-1;
 }
-
-// ══════════════════════════════════════════════
 
 </script>
 </body>
