@@ -1121,13 +1121,22 @@ const ME = (() => {
     const prevEl=slotEl(slotActive);
     nextEl.classList.add('active');prevEl.classList.remove('active');slotActive=next;
     setTimeout(()=>{prevEl.innerHTML='';prevEl.className='media-slot';},900);
-    v.play().catch(()=>{
-      if(cfg.fallback){
-        nextEl.innerHTML='';
-        const vf=makeVideo(cfg.fallback);nextEl.appendChild(vf);
-        vf.play().catch(()=>{});currentVideo=vf;
-      }
-    });
+    console.log('[ME] startVideo src='+cfg.src+' slot='+next);
+    const playPromise=v.play();
+    if(playPromise!==undefined){
+      playPromise.then(()=>{
+        console.log('[ME] video playing OK: '+cfg.src);
+      }).catch(err=>{
+        console.warn('[ME] video play failed: '+cfg.src, err);
+        if(cfg.fallback){
+          console.log('[ME] trying fallback: '+cfg.fallback);
+          nextEl.innerHTML='';
+          const vf=makeVideo(cfg.fallback);nextEl.appendChild(vf);
+          vf.play().then(()=>console.log('[ME] fallback playing OK')).catch(e=>console.error('[ME] fallback failed',e));
+          currentVideo=vf;
+        }
+      });
+    }
     currentVideo=v;
   }
   function stopAll(){
