@@ -256,7 +256,7 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
 /* ══════════════════════════════════════
    SCENE G — ช่วงเวลาพิเศษ (NEW)
 ══════════════════════════════════════ */
-#sG{background:#000;overflow:hidden}
+#sG{background:transparent;overflow:hidden}
 
 /* Dark cinematic overlay on top of video */
 .sg-overlay{
@@ -758,7 +758,7 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
   <!-- Cinematic overlays -->
   <div class="sg-overlay"></div>
   <div class="sg-dimmer" id="sgDimmer"></div>
-  <canvas class="bg-canvas" id="cG"></canvas>
+  <canvas class="bg-canvas" id="cG" style="opacity:0.15"></canvas>
 
   <div class="box" style="padding:0 4px">
     <!-- Header -->
