@@ -1075,7 +1075,7 @@ const ME = (() => {
     2:  { type:'slideshow', speed:2500, mode:'normal', imgs:['1.jpg','2.jpg','3.jpg'] },
     3:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
     4:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
-    14: { type:'video', mode:'normal', src:'special.mov' },  /* NEW: Scene G */
+    14: { type:'video', mode:'normal', src:'special.mp4', fallback:'Scene 3.MOV' },  /* NEW: Scene G */
   };
   let slotActive='A', slideshowTimer=null, slideIndex=0, currentVideo=null;
   const preloaded={};
@@ -1121,7 +1121,14 @@ const ME = (() => {
     const prevEl=slotEl(slotActive);
     nextEl.classList.add('active');prevEl.classList.remove('active');slotActive=next;
     setTimeout(()=>{prevEl.innerHTML='';prevEl.className='media-slot';},900);
-    v.play().catch(()=>{});currentVideo=v;
+    v.play().catch(()=>{
+      if(cfg.fallback){
+        nextEl.innerHTML='';
+        const vf=makeVideo(cfg.fallback);nextEl.appendChild(vf);
+        vf.play().catch(()=>{});currentVideo=vf;
+      }
+    });
+    currentVideo=v;
   }
   function stopAll(){
     if(slideshowTimer){clearTimeout(slideshowTimer);slideshowTimer=null;}
