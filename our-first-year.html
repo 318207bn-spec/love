@@ -1089,8 +1089,15 @@ const ME = (() => {
   }
   function makeVideo(src){
     const v=document.createElement('video');
-    v.src=src;v.muted=true;v.playsInline=true;v.autoplay=false;v.loop=true;
+    v.muted=true;v.playsInline=true;v.autoplay=false;v.loop=true;
     v.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.68) contrast(1.05)';
+    // Support .mov with mp4/webm fallback for cross-browser compatibility
+    const base=src.replace(/\.(mov|mp4|webm)$/i,'');
+    const ext=(src.match(/\.(mov|mp4|webm)$/i)||['',src])[1].toLowerCase();
+    const pairs = ext==='mov'
+      ? [[src,'video/mp4'],[base+'.mp4','video/mp4'],[base+'.webm','video/webm']]
+      : [[src,'video/'+(ext||'mp4')],[base+'.webm','video/webm']];
+    pairs.forEach(([s,t])=>{const se=document.createElement('source');se.src=s;se.type=t;v.appendChild(se);});
     return v;
   }
   function showImg(src,mode,instant){
