@@ -253,36 +253,136 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
 .dn-conclusion{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.05rem,4vw,1.3rem);line-height:2;color:rgba(255,255,255,0.7);margin:20px 0 28px;max-width:340px}
 .dn-conclusion .dn-em{background:linear-gradient(135deg,#f472b6,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
 
-/* SCENE G */
+/* ══════════════════════════════════════
+   SCENE G — ช่วงเวลาพิเศษ (NEW)
+══════════════════════════════════════ */
 #sG{background:transparent;overflow:hidden}
-.sg-overlay{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.25) 40%,rgba(0,0,0,0.25) 60%,rgba(0,0,0,0.75) 100%)}
-.sg-dimmer{position:absolute;inset:0;z-index:3;pointer-events:none;background:rgba(0,0,0,0);transition:background 0.6s ease}
-.sg-dimmer.dim{background:rgba(0,0,0,0.55)}
-.sg-header{position:relative;z-index:10;text-align:center;padding-bottom:16px}
-.sg-eyebrow{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.5em;color:rgba(255,255,255,0.3);text-transform:uppercase;display:block;margin-bottom:10px;animation:fadeUp 0.9s 0.3s both}
-.sg-title{font-family:'Cinzel',serif;font-size:clamp(1.3rem,5.5vw,1.9rem);font-weight:600;letter-spacing:0.06em;line-height:1.35;background:linear-gradient(135deg,#fbcfe8,#f472b6,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 20px rgba(244,114,182,0.35));animation:fadeUp 0.9s 0.6s both}
-.sg-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(0.9rem,3.2vw,1.05rem);color:rgba(255,255,255,0.35);margin-top:8px;animation:fadeUp 0.9s 0.9s both}
-.sg-cards{position:relative;z-index:10;display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:380px;margin:18px auto 0}
-.sg-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:18px;padding:18px 14px 16px;cursor:pointer;position:relative;overflow:hidden;transition:transform 0.25s ease,box-shadow 0.35s ease,border-color 0.35s ease;animation:fadeUp 0.8s both;-webkit-tap-highlight-color:transparent}
+
+/* Dark cinematic overlay on top of video */
+.sg-overlay{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.25) 40%,rgba(0,0,0,0.25) 60%,rgba(0,0,0,0.75) 100%);
+}
+
+/* Dimmer — activated when a card is open */
+.sg-dimmer{
+  position:absolute;inset:0;z-index:3;pointer-events:none;
+  background:rgba(0,0,0,0);transition:background 0.6s ease;
+}
+.sg-dimmer.dim{background:rgba(0,0,0,0.55);}
+
+/* Top header */
+.sg-header{
+  position:relative;z-index:10;text-align:center;
+  padding-bottom:16px;
+}
+.sg-eyebrow{
+  font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.5em;
+  color:rgba(255,255,255,0.3);text-transform:uppercase;display:block;margin-bottom:10px;
+  animation:fadeUp 0.9s 0.3s both;
+}
+.sg-title{
+  font-family:'Cinzel',serif;font-size:clamp(1.3rem,5.5vw,1.9rem);font-weight:600;
+  letter-spacing:0.06em;line-height:1.35;
+  background:linear-gradient(135deg,#fbcfe8,#f472b6,#fbbf24);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 20px rgba(244,114,182,0.35));
+  animation:fadeUp 0.9s 0.6s both;
+}
+.sg-sub{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(0.9rem,3.2vw,1.05rem);color:rgba(255,255,255,0.35);
+  margin-top:8px;animation:fadeUp 0.9s 0.9s both;
+}
+
+/* Memory card grid */
+.sg-cards{
+  position:relative;z-index:10;
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  width:100%;max-width:380px;margin:18px auto 0;
+}
+
+.sg-card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.09);
+  border-radius:18px;
+  padding:18px 14px 16px;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  transition:transform 0.25s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  animation:fadeUp 0.8s both;
+  -webkit-tap-highlight-color:transparent;
+}
 .sg-card:nth-child(1){animation-delay:1.1s}
 .sg-card:nth-child(2){animation-delay:1.3s}
 .sg-card:nth-child(3){animation-delay:1.5s}
 .sg-card:nth-child(4){animation-delay:1.7s}
-.sg-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(244,114,182,0.08),rgba(251,191,36,0.04));opacity:0;transition:opacity 0.4s}
-.sg-card:active{transform:scale(0.96)}
-.sg-card.sg-open{border-color:rgba(244,114,182,0.35);box-shadow:0 0 28px rgba(244,114,182,0.2),0 4px 20px rgba(0,0,0,0.5)}
-.sg-card.sg-open::before{opacity:1}
-.sg-card::after{content:'';position:absolute;top:-40%;left:-40%;width:180%;height:180%;background:radial-gradient(circle,rgba(244,114,182,0.12) 0%,transparent 65%);opacity:0;transition:opacity 0.5s;pointer-events:none}
-.sg-card.sg-open::after{opacity:1}
-.sg-card-icon{font-size:1.7rem;display:block;margin-bottom:8px;transition:transform 0.3s}
-.sg-card.sg-open .sg-card-icon{transform:scale(1.15)}
-.sg-card-label{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.25em;color:rgba(255,255,255,0.4);text-transform:uppercase;display:block;margin-bottom:6px}
-.sg-card-title{font-family:'Cormorant Garamond',serif;font-size:clamp(0.9rem,3.2vw,1rem);font-weight:400;color:rgba(255,255,255,0.75);line-height:1.4;display:block}
-.sg-card-body{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(0.85rem,3vw,0.95rem);color:rgba(255,255,255,0.62);line-height:1.85;max-height:0;overflow:hidden;transition:max-height 0.55s cubic-bezier(0.4,0,0.2,1),opacity 0.5s ease,margin-top 0.3s;opacity:0;margin-top:0}
-.sg-card.sg-open .sg-card-body{max-height:200px;opacity:1;margin-top:10px}
-.sg-card-quote{color:rgba(244,114,182,0.8);font-style:normal;display:block;margin-top:6px;font-size:0.9em}
-.sg-hint-row{position:relative;z-index:10;text-align:center;font-family:'Sarabun',sans-serif;font-size:0.68rem;letter-spacing:0.18em;color:rgba(255,255,255,0.18);margin-top:14px;animation:fadeUp 0.8s 2s both}
-.sg-next-wrap{position:relative;z-index:10;text-align:center;margin-top:18px;animation:fadeUp 0.8s 2.2s both}
+
+/* Shimmer layer */
+.sg-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(244,114,182,0.08),rgba(251,191,36,0.04));
+  opacity:0;transition:opacity 0.4s;
+}
+.sg-card:active{transform:scale(0.96);}
+.sg-card.sg-open{
+  border-color:rgba(244,114,182,0.35);
+  box-shadow:0 0 28px rgba(244,114,182,0.2), 0 4px 20px rgba(0,0,0,0.5);
+}
+.sg-card.sg-open::before{opacity:1;}
+
+/* Glow orb behind open card */
+.sg-card::after{
+  content:'';position:absolute;top:-40%;left:-40%;width:180%;height:180%;
+  background:radial-gradient(circle,rgba(244,114,182,0.12) 0%,transparent 65%);
+  opacity:0;transition:opacity 0.5s;pointer-events:none;
+}
+.sg-card.sg-open::after{opacity:1;}
+
+.sg-card-icon{font-size:1.7rem;display:block;margin-bottom:8px;transition:transform 0.3s;}
+.sg-card.sg-open .sg-card-icon{transform:scale(1.15);}
+
+.sg-card-label{
+  font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.25em;
+  color:rgba(255,255,255,0.4);text-transform:uppercase;display:block;margin-bottom:6px;
+}
+.sg-card-title{
+  font-family:'Cormorant Garamond',serif;font-size:clamp(0.9rem,3.2vw,1rem);
+  font-weight:400;color:rgba(255,255,255,0.75);line-height:1.4;display:block;
+}
+
+/* Expanded text */
+.sg-card-body{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(0.85rem,3vw,0.95rem);color:rgba(255,255,255,0.62);
+  line-height:1.85;
+  max-height:0;overflow:hidden;
+  transition:max-height 0.55s cubic-bezier(0.4,0,0.2,1), opacity 0.5s ease, margin-top 0.3s;
+  opacity:0;margin-top:0;
+}
+.sg-card.sg-open .sg-card-body{max-height:200px;opacity:1;margin-top:10px;}
+
+.sg-card-quote{
+  color:rgba(244,114,182,0.8);font-style:normal;
+  display:block;margin-top:6px;font-size:0.9em;
+}
+
+/* Tap hint */
+.sg-hint-row{
+  position:relative;z-index:10;text-align:center;
+  font-family:'Sarabun',sans-serif;font-size:0.68rem;
+  letter-spacing:0.18em;color:rgba(255,255,255,0.18);
+  margin-top:14px;animation:fadeUp 0.8s 2s both;
+}
+
+/* Next button area */
+.sg-next-wrap{
+  position:relative;z-index:10;text-align:center;
+  margin-top:18px;animation:fadeUp 0.8s 2.2s both;
+}
+
+/* ══════════════════════════════════════ */
 
 /* SCENE E */
 #sE{background:#000;overflow:hidden}
@@ -330,17 +430,42 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
 .sound-unlock-banner.gone{opacity:0;pointer-events:none}
 @keyframes bannerPulse{0%,100%{box-shadow:0 0 0 0 rgba(244,114,182,0.25)}50%{box-shadow:0 0 0 10px rgba(244,114,182,0)}}
 
-/* MEDIA LAYER */
-#mediaLayer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.media-slot{position:absolute;inset:0;opacity:0;transition:opacity 0.8s ease;overflow:hidden}
+/* ═══════════════════════════════════════
+   MEDIA LAYER — cinematic bg system
+═══════════════════════════════════════ */
+#mediaLayer{
+  position:fixed;inset:0;z-index:0;
+  pointer-events:none;overflow:hidden;
+}
+/* Slot A/B for crossfade */
+.media-slot{
+  position:absolute;inset:0;
+  opacity:0;
+  transition:opacity 0.8s ease;
+  overflow:hidden;
+}
 .media-slot.active{opacity:1 !important}
-.media-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:mediaZoom 6s ease-in-out forwards;filter:brightness(0.72) contrast(1.08);display:block}
-.media-slot video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.68) contrast(1.05);display:block}
+.media-slot img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;
+  animation:mediaZoom 6s ease-in-out forwards;
+  filter:brightness(0.72) contrast(1.08);
+  display:block;
+}
+.media-slot video{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;
+  filter:brightness(0.68) contrast(1.05);
+  display:block;
+}
 .media-slot.montage img{animation:mediaZoom 1.2s ease-in-out forwards}
 .media-slot.ending img{animation:mediaZoomSlow 12s ease-in-out forwards}
 @keyframes mediaZoom{0%{transform:scale(1)}100%{transform:scale(1.07)}}
 @keyframes mediaZoomSlow{0%{transform:scale(1)}100%{transform:scale(1.09)}}
-#mediaLayer::after{content:'';position:absolute;inset:0;z-index:10;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,0.28) 0%,rgba(0,0,0,0.08) 40%,rgba(0,0,0,0.08) 60%,rgba(0,0,0,0.55) 100%)}
+#mediaLayer::after{
+  content:'';position:absolute;inset:0;z-index:10;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(0,0,0,0.28) 0%,rgba(0,0,0,0.08) 40%,rgba(0,0,0,0.08) 60%,rgba(0,0,0,0.55) 100%);
+}
 </style>
 </head>
 <body>
@@ -432,7 +557,7 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
   </div>
 </section>
 
-<!-- SCENE 3 -->
+<!-- SCENE 3 — วีดีโอ Scene 3.mp4 -->
 <section class="scene" id="s3">
   <video class="scene-video" id="s3Video" src="Scene 3.MOV" muted playsinline preload="auto" loop></video>
   <div class="s3-overlay"></div>
@@ -541,13 +666,12 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
       <p class="letter-p" id="lp5">และถ้าวันข้างหน้ามีอุปสรรคอีก เค้าก็เชื่อว่าเราจะยังเลือกกันเหมือนเดิม<br>เพราะ <span class="em">สิ่งที่มีค่าที่สุด ไม่ใช่การเป็นคนที่ถูกเสมอไป แต่คือการมีเธออยู่ข้างๆ</span></p>
       <p class="letter-p" id="lp6">เค้ายังอยากให้มันเป็นแบบนั้น ในปีที่สอง และปีต่อๆ ไป 💗</p>
       <div class="letter-sign" id="lsign">ด้วยรักทั้งหมดที่มี 💛</div>
-      <!-- Scene 9 → Scene 10 = sA (counter) -->
-      <div class="letter-secret-btn" id="letterSecretBtn"><button class="btn btn-pink" onclick="goTo(10)">ทุกวินาทีที่อยู่ด้วยกัน →</button></div>
+      <div class="letter-secret-btn" id="letterSecretBtn"><button class="btn btn-pink" onclick="goTo(10)">ต่อไป — บทส่งท้าย →</button></div>
     </div>
   </div>
 </section>
 
-<!-- SCENE A (index 10) — counter -->
+<!-- SCENE A (10) -->
 <section class="scene" id="sA">
   <canvas class="bg-canvas" id="cA"></canvas>
   <div class="box">
@@ -560,12 +684,11 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
       <div class="counter-cell"><span class="cn-num" id="cnSecs">00</span><span class="cn-label">วินาที</span></div>
     </div>
     <p class="counter-tagline">"และทุกวินาที<br>เค้าก็ยัง<span class="ct-em">เลือกเธออยู่</span>"</p>
-    <!-- sA → index 11 = sB (choose path) -->
-    <br><button class="btn btn-pink" onclick="goTo(11)" style="margin-top:16px">ถ้าย้อนกลับไปได้… →</button>
+    <br><button class="btn btn-pink" onclick="goTo(11)" style="margin-top:16px">ต่อไป →</button>
   </div>
 </section>
 
-<!-- SCENE B (index 11) — choose path -->
+<!-- SCENE B (11) -->
 <section class="scene" id="sB">
   <canvas class="bg-canvas" id="cB"></canvas>
   <div class="box">
@@ -588,14 +711,14 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
   </div>
 </section>
 
-<!-- SCENE C (index 12) — confession (emotional peak) -->
+<!-- SCENE C (12) -->
 <section class="scene" id="sC">
   <div class="sc-scroll" id="sCScroll" ontouchstart="">
     <div class="sc-inner">
       <div class="sc-header"><span>บทสารภาพ</span>สิ่งที่เค้าไม่เคยพูดออกไป</div>
       <p class="sc-p" id="scp0">มีหลายอย่างที่เค้าไม่ได้พูด ไม่ใช่เพราะไม่รู้สึก แต่เพราะบางความรู้สึกมันลึกเกินกว่าจะพูดออกมาได้ง่ายๆ</p>
       <p class="sc-p" id="scp1"><span class="sc-em">เค้ากลัวเสียเธอมากกว่าที่แสดงออกเสมอ</span><br>แต่เค้าไม่ใช่คนที่เก่งเรื่องการแสดงความกลัว บางครั้งเค้าเลยเลือกทำตัวนิ่งๆ ทำเหมือนไม่เป็นอะไร ทั้งที่ข้างในมันสั่นไปหมด</p>
-      <p class="sc-p" id="scp2">เค้าไม่ได้ไม่แคร่<br>เค้าแค่ไม่อยากให้เธอเห็นว่าเธอสำคัญกับเค้ามากแค่ไหน เพราะการยอมรับว่ากลัวเสียใครสักคน มันคือการยอมรับว่าเขามีอิทธิพลต่อหัวใจเรามากจริงๆ</p>
+      <p class="sc-p" id="scp2">เค้าไม่ได้ไม่แคร์<br>เค้าแค่ไม่อยากให้เธอเห็นว่าเธอสำคัญกับเค้ามากแค่ไหน เพราะการยอมรับว่ากลัวเสียใครสักคน มันคือการยอมรับว่าเขามีอิทธิพลต่อหัวใจเรามากจริงๆ</p>
       <div class="sc-divider"></div>
       <p class="sc-p" id="scp3">บางวันที่เค้าดูนิ่ง ดูเฉย หรือเหมือนถอยออกมา จริงๆ แล้วเค้ากำลังพยายามอยู่<br><span class="sc-em">พยายามควบคุมอารมณ์ พยายามคิดก่อนพูด พยายามไม่ให้คำพูดชั่ววูบทำร้ายเธอ</span></p>
       <p class="sc-p" id="scp4">บางครั้งความเงียบของเค้าไม่ใช่การเมิน<br>แต่มันคือการเลือกที่จะไม่ทำให้ทุกอย่างแย่ลงไปกว่าเดิม</p>
@@ -608,26 +731,46 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
       <p class="sc-p" id="scp9">สิ่งที่เค้าไม่เคยพูดออกไปชัดๆ ก็คือ<br><span class="sc-em">เค้ากลัวเสียเธอ มากกว่าที่เค้าเคยกลัวเสียอะไรในชีวิต</span></p>
       <p class="sc-p" id="scp10">และถ้าวันไหนเค้าดูนิ่ง ดูแข็ง หรือดูไม่แสดงออก อยากให้เธอรู้ว่า ข้างในมันมีความพยายาม มีความรัก และมีความกลัวที่จะเสียเธออยู่เสมอ</p>
       <p class="sc-p" id="scp11">แค่บางทีเค้าไม่เก่งพอที่จะพูดมันออกมา<br><span class="sc-gold">แต่วันนี้ เค้าอยากให้เธอรู้ทั้งหมดแล้ว 💗</span></p>
-      <!-- sC → index 13 = sG (special memories payoff) -->
-      <div class="sc-next-btn" id="sCNextBtn"><button class="btn btn-pink" onclick="goTo(13)">ช่วงเวลาพิเศษ →</button></div>
+      <div class="sc-next-btn" id="sCNextBtn"><button class="btn btn-pink" onclick="goTo(13)">ต่อไป →</button></div>
     </div>
   </div>
 </section>
 
-<!-- SCENE G (index 13) — ช่วงเวลาพิเศษ (payoff after confession) -->
+<!-- SCENE D (13) -->
+<section class="scene" id="sD">
+  <canvas class="bg-canvas" id="cD"></canvas>
+  <div class="box">
+    <p class="t-small" style="color:rgba(255,255,255,0.2);margin-bottom:12px">ก่อน — หลัง</p>
+    <h2 class="t-title" style="font-weight:300;color:rgba(255,255,255,0.6);font-size:clamp(1rem,4vw,1.2rem);margin-bottom:16px">ความรักที่โตขึ้น</h2>
+    <div class="dn-split">
+      <div class="dn-side dn-left"><span class="dn-label">วันแรก</span><span class="dn-icon">⚡</span><span class="dn-item">ตื่นเต้น หวาน</span><span class="dn-item">ใจเต้นแรง</span><span class="dn-item">รออ่านข้อความ</span><span class="dn-item">ทุกอย่างใหม่</span><span class="dn-item">กลัวจะเสียเธอ</span></div>
+      <div class="dn-side dn-right"><span class="dn-label">วันนี้</span><span class="dn-icon">🌙</span><span class="dn-item">สบายใจ มั่นคง</span><span class="dn-item">เข้าใจกัน</span><span class="dn-item">รู้ว่าเธอยังอยู่</span><span class="dn-item">ทุกอย่างคุ้นเคย</span><span class="dn-item">รู้ว่าสำคัญ</span></div>
+    </div>
+    <p class="dn-conclusion">"ความรักของเราไม่ได้ลดลง<br>มันแค่<span class="dn-em">โตขึ้น</span>"</p>
+    <button class="btn btn-pink" onclick="goTo(14)">ช่วงเวลาพิเศษ →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SCENE G (14) — ช่วงเวลาพิเศษ  [NEW]
+══════════════════════════════════════════ -->
 <section class="scene" id="sG">
+  <!-- Cinematic overlays -->
   <div class="sg-overlay"></div>
   <div class="sg-dimmer" id="sgDimmer"></div>
   <canvas class="bg-canvas" id="cG" style="opacity:0.15"></canvas>
 
   <div class="box" style="padding:0 4px">
+    <!-- Header -->
     <div class="sg-header">
       <span class="sg-eyebrow">ความทรงจำ · Memories</span>
       <h1 class="sg-title">ช่วงเวลาพิเศษ<br><span style="font-size:0.55em;letter-spacing:0.18em;color:rgba(255,255,255,0.4)">ของเรา</span></h1>
       <p class="sg-sub">"ทุกช่วงเวลาเล็กๆ<br>คือสิ่งที่เค้าจำไว้มากที่สุด"</p>
     </div>
 
+    <!-- Memory cards -->
     <div class="sg-cards" id="sgCards">
+
       <div class="sg-card" id="sgCard0" onclick="toggleSgCard(0)">
         <span class="sg-card-icon">🌅</span>
         <span class="sg-card-label">ช่วงแรก</span>
@@ -667,34 +810,19 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
           <span class="sg-card-quote">"ยังอยากเลือกเธออยู่เสมอ 💛"</span>
         </div>
       </div>
+
     </div>
 
     <p class="sg-hint-row">แตะ card เพื่อเปิดความทรงจำ ✨</p>
 
     <div class="sg-next-wrap">
-      <!-- sG → index 14 = sD (growth) -->
-      <button class="btn btn-pink" onclick="goTo(14)">ความรักที่โตขึ้น →</button>
+      <button class="btn btn-pink" onclick="goTo(15)">ดู Credits →</button>
     </div>
   </div>
 </section>
+<!-- ══════════════════════════════════════════ -->
 
-<!-- SCENE D (index 14) — before/after growth -->
-<section class="scene" id="sD">
-  <canvas class="bg-canvas" id="cD"></canvas>
-  <div class="box">
-    <p class="t-small" style="color:rgba(255,255,255,0.2);margin-bottom:12px">ก่อน — หลัง</p>
-    <h2 class="t-title" style="font-weight:300;color:rgba(255,255,255,0.6);font-size:clamp(1rem,4vw,1.2rem);margin-bottom:16px">ความรักที่โตขึ้น</h2>
-    <div class="dn-split">
-      <div class="dn-side dn-left"><span class="dn-label">วันแรก</span><span class="dn-icon">⚡</span><span class="dn-item">ตื่นเต้น หวาน</span><span class="dn-item">ใจเต้นแรง</span><span class="dn-item">รออ่านข้อความ</span><span class="dn-item">ทุกอย่างใหม่</span><span class="dn-item">กลัวจะเสียเธอ</span></div>
-      <div class="dn-side dn-right"><span class="dn-label">วันนี้</span><span class="dn-icon">🌙</span><span class="dn-item">สบายใจ มั่นคง</span><span class="dn-item">เข้าใจกัน</span><span class="dn-item">รู้ว่าเธอยังอยู่</span><span class="dn-item">ทุกอย่างคุ้นเคย</span><span class="dn-item">รู้ว่าสำคัญ</span></div>
-    </div>
-    <p class="dn-conclusion">"ความรักของเราไม่ได้ลดลง<br>มันแค่<span class="dn-em">โตขึ้น</span>"</p>
-    <!-- sD → index 15 = sE (credits) -->
-    <button class="btn btn-pink" onclick="goTo(15)">ดู Credits →</button>
-  </div>
-</section>
-
-<!-- SCENE E (index 15) — credits -->
+<!-- SCENE E (15) -->
 <section class="scene" id="sE">
   <canvas class="bg-canvas" id="cE"></canvas>
   <div class="credits-wrap">
@@ -715,11 +843,10 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
       <div style="height:80px"></div>
     </div>
   </div>
-  <!-- sE → index 16 = sF (secret) -->
   <div class="credits-next" id="creditsNext"><button class="btn btn-dark" onclick="goTo(16)">💌 &nbsp;ข้อความลับ</button></div>
 </section>
 
-<!-- SCENE F (index 16) — secret letter lock -->
+<!-- SCENE F (16) -->
 <section class="scene" id="sF">
   <canvas class="bg-canvas" id="cF"></canvas>
   <div class="box">
@@ -892,98 +1019,80 @@ const AM = (() => {
       document.getElementById('soundToggle').textContent='🔊';
       load().then(()=>this.handleScene(cur));
     },
-    // ══════════════════════════════════════════
-    // AUDIO MAP (new scene order):
-    // 0–4  : Track 0 — opening / sweet
-    // 5    : rain + no music
-    // 6    : rain + track2 (conflict)
-    // 7–9  : Track 1 — warm / hopeful (resolve, timeline, letter)
-    // 10   : sA counter → Track 1 continues
-    // 11   : sB choose  → Track 1 continues
-    // 12   : sC confession → Track 2 (deeper emotional peak)
-    // 13   : sG special  → Track 1 (warm payoff)
-    // 14   : sD growth   → Track 1 continues
-    // 15+  : Track 3 fading (credits, secret)
-    // ══════════════════════════════════════════
     handleScene(n){
       if(!unlocked)return;
 
-      // Scenes 0–4: Track 0 (opening / sweet intro)
+      // ── ACT I: หวาน ใส โรแมนติก (Scene 0–4) ──────────────────────
+      // track0: เบาสบาย รู้สึกตื่นเต้นเล็กๆ ใจเต้น
       if(n>=0&&n<=4){
         stopRain(1500);
         if(curTrack!==0)crossfade(0,2000);
         return;
       }
 
-      // Scene 5: rain starts, music fades
+      // ── ACT II: เงียบ เหงา ไร้เสียงเพลง (Scene 5) ─────────────────
+      // ไม่มีเพลง + ฝนเบาๆ — สร้างความว่างก่อนดราม่า
       if(n===5){
-        if(!rainActive)startRain(2000);
-        stopMusic(2000);
+        stopMusic(2500);                         // fade เพลงออกช้าๆ ก่อน
+        setTimeout(()=>{
+          if(!rainActive)startRain(2000);        // ฝนค่อยๆ ซึมเข้ามาหลังเพลงจาง
+        },1200);
         return;
       }
 
-      // Scene 6: rain + track2 (conflict peak)
+      // ── ACT III: เครียด หน่วง ดราม่า (Scene 6) ────────────────────
+      // track2 + ฝน = emotional peak แรก ตึงเครียด กดดัน
       if(n===6){
         if(!rainActive)startRain(1500);
-        if(curTrack!==2){stopMusic(1500);setTimeout(()=>play(2,1.5),1800);}
+        if(curTrack!==2){
+          stopMusic(1500);
+          setTimeout(()=>play(2,2.0),1800);     // fade in ช้ากว่าเดิม = cinematic weight
+        }
         return;
       }
 
-      // Scenes 7–9: Track 1 (warm, hopeful — resolve, timeline, letter)
-      if(n>=7&&n<=9){
-        stopRain(2000);
-        if(curTrack!==1)crossfade(1,2000);
-        return;
-      }
-
-      // Scene 10 (sA counter): Track 1 continues
-      if(n===10){
-        stopRain(1500);
-        if(curTrack!==1)crossfade(1,2000);
-        return;
-      }
-
-      // Scene 11 (sB choose): Track 1 continues
-      if(n===11){
-        stopRain(1500);
-        if(curTrack!==1)crossfade(1,2000);
-        return;
-      }
-
-      // Scene 12 (sC confession): emotional peak → track2 (deeper)
-      if(n===12){
-        stopRain(1500);
-        if(curTrack!==2)crossfade(2,2500);
-        return;
-      }
-
-      // Scene 13 (sG special memories): warm payoff → back to track1
-      if(n===13){
-        stopRain(1500);
+      // ── ACT IV: กลับมาดี อบอุ่น เข้าใจกัน (Scene 7–11) ──────────
+      // track1: warm & hopeful — resolve → timeline → letter → counter → choose
+      // stopRain ช้า 2.5s = ให้รู้สึก "ฝนหยุด โลกสว่างขึ้น"
+      if(n>=7&&n<=11){
+        stopRain(2500);
         if(curTrack!==1)crossfade(1,2500);
         return;
       }
 
-      // Scene 14 (sD growth): Track 1 continues
-      if(n===14){
+      // ── ACT V: EMOTIONAL PEAK สูงสุด (Scene 12 = sC confession) ───
+      // track2 กลับมาอีกครั้ง แต่ cinematic มากขึ้น
+      // crossfade ช้า 3.5s = ให้รู้สึกเหมือนหนังขึ้น climax ค่อยๆ
+      if(n===12){
         stopRain(1500);
-        if(curTrack!==1)crossfade(1,2000);
+        if(curTrack!==2)crossfade(2,3500);
         return;
       }
 
-      // Scenes 15+ (credits, secret): Track 3 fading out slowly
+      // ── ACT VI: หลังพีค อบอุ่น โล่งใจ (Scene 13–14) ──────────────
+      // track1 กลับมา = payoff หลัง climax รู้สึก "ผ่านพ้นมาได้"
+      // crossfade 3s = เหมือนแสงแดดค่อยๆ ส่องหลังฝนหยุด
+      if(n===13||n===14){
+        stopRain(1500);
+        if(curTrack!==1)crossfade(1,3000);
+        return;
+      }
+
+      // ── ACT VII: END CREDIT สงบ เหมือนหนังจบ (Scene 15–16) ───────
+      // track3 crossfade 3s = เข้ามาเนียนๆ ไม่สะดุด
+      // จากนั้น volume ค่อยๆ ลดลงใน 30 วินาที = long cinematic fade
       if(n>=15){
         stopRain(1500);
         if(curTrack!==3){
-          crossfade(3,2500);
+          crossfade(3,3000);
           setTimeout(()=>{
             if(srcGain&&curTrack===3){
               const now=ctx.currentTime;
               srcGain.gain.cancelScheduledValues(now);
               srcGain.gain.setValueAtTime(T[3].vol,now);
-              srcGain.gain.linearRampToValueAtTime(0.025,now+25);
+              srcGain.gain.linearRampToValueAtTime(0.018,now+30); // 30s fade = cinematic
             }
-          },3000);
+          },3500);
         }
         return;
       }
@@ -1003,19 +1112,15 @@ function handleFirstUnlock(){AM.unlock();}
 function toggleSound(){AM.toggleMute();}
 
 // ══════════════════════════════════════════════
-// MEDIA ENGINE
+// MEDIA ENGINE — declared BEFORE scene engine
 // ══════════════════════════════════════════════
 const ME = (() => {
-  // ══════════════════════════════════════════
-  // MEDIA MAP (new scene order):
-  // 13 = sG (special memories) → special.mp4
-  // ══════════════════════════════════════════
   const SCENE_MEDIA = {
     0:  { type:'slideshow', speed:2800, mode:'normal', imgs:['mem_01.jpg'] },
     2:  { type:'slideshow', speed:2500, mode:'normal', imgs:['1.jpg','2.jpg','3.jpg'] },
     3:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
     4:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
-    13: { type:'video', mode:'normal', src:'special.mp4', fallback:'Scene 3.MOV' },
+    14: { type:'video', mode:'normal', src:'special.mp4', fallback:'Scene 3.MOV' },  /* NEW: Scene G */
   };
   let slotActive='A', slideshowTimer=null, slideIndex=0, currentVideo=null;
   const preloaded={};
@@ -1031,6 +1136,7 @@ const ME = (() => {
     const v=document.createElement('video');
     v.muted=true;v.playsInline=true;v.autoplay=false;v.loop=true;
     v.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.68) contrast(1.05)';
+    // Support .mov with mp4/webm fallback for cross-browser compatibility
     const base=src.replace(/\.(mov|mp4|webm)$/i,'');
     const ext=(src.match(/\.(mov|mp4|webm)$/i)||['',src])[1].toLowerCase();
     const pairs = ext==='mov'
@@ -1095,50 +1201,54 @@ const ME = (() => {
 })();
 
 // ══════════════════════════════════════════════
-// HELPERS
+// HELPERS — shared utilities
 // ══════════════════════════════════════════════
+
+// Mobile detection (used for particle count, rain drops)
 const IS_MOBILE = window.innerWidth < 768;
+
+// Safe getElementById shorthand
 const $=id=>document.getElementById(id);
 
+// Animate a list of elements by adding a class with staggered delay
+// Returns total delay so callers can chain
+function staggerReveal(els, cls, baseDelay, step){
+  els.forEach((el,i)=>{
+    el.classList.remove(cls);
+    setTimeout(()=>el.classList.add(cls), baseDelay + i*step);
+  });
+  return baseDelay + els.length*step;
+}
+
+// Bind a touchmove stopper on a scroll container only once (prevents memory leak)
 function bindScrollFix(el){
   if(!el||el.dataset.scrollFixed)return;
   el.dataset.scrollFixed='1';
   el.addEventListener('touchmove',e=>e.stopPropagation(),{passive:true});
 }
 
+// Reveal staggered .letter-p / .sc-p style paragraphs, return total ms
+function revealParas(selector, baseDelay, step, container){
+  const ps=(container||document).querySelectorAll(selector);
+  ps.forEach((p,i)=>{p.classList.remove('visible');setTimeout(()=>p.classList.add('visible'),baseDelay+i*step);});
+  return baseDelay + ps.length*step;
+}
+
 // ══════════════════════════════════════════════
 // SCENE ENGINE
 // ══════════════════════════════════════════════
 let cur=0;
-let transitioning=false;
+let transitioning=false; // FIX: prevent rapid scene tapping
 const TOTAL=17;
-
-// ══════════════════════════════════════════════
-// SCENE_ID — NEW ORDER:
-// 0→s0  1→s1  2→s2  3→s3  4→s4  5→s5  6→s6  7→s7  8→s8  9→s9
-// 10→sA (counter)
-// 11→sB (choose path)
-// 12→sC (confession ← emotional peak)
-// 13→sG (special memories ← warm payoff)
-// 14→sD (before/after growth)
-// 15→sE (credits)
-// 16→sF (secret letter)
-// ══════════════════════════════════════════════
 const SCENE_ID={
-  0:'s0', 1:'s1', 2:'s2', 3:'s3', 4:'s4',
-  5:'s5', 6:'s6', 7:'s7', 8:'s8', 9:'s9',
-  10:'sA',
-  11:'sB',
-  12:'sC',
-  13:'sG',
-  14:'sD',
-  15:'sE',
-  16:'sF'
+  0:'s0',1:'s1',2:'s2',3:'s3',4:'s4',5:'s5',6:'s6',
+  7:'s7',8:'s8',9:'s9',10:'sA',11:'sB',12:'sC',13:'sD',
+  14:'sG',15:'sE',16:'sF'
 };
 function sid(n){return SCENE_ID[n]||'s'+n;}
 
 function goTo(n,cinematic=false){
-  if(n===cur||transitioning)return;
+  if(n===cur||transitioning)return; // FIX: lock during transition
   transitioning=true;
   vibrate(25);
   ME.leaveScene(cur);
@@ -1154,7 +1264,7 @@ function goTo(n,cinematic=false){
     nx.classList.add('active');
     nx.style.animation='none';void nx.offsetWidth;nx.style.animation='';
     nx.classList.add('fade-in');
-    setTimeout(()=>{nx.classList.remove('fade-in');transitioning=false;},700);
+    setTimeout(()=>{nx.classList.remove('fade-in');transitioning=false;},700); // unlock after anim
     onEnter(n);
   };
   if(cinematic){
@@ -1169,20 +1279,13 @@ function updateProgress(n){
   $('sceneCounter').textContent=(n+1)+' / '+TOTAL;
 }
 
-// ══════════════════════════════════════════════
-// SCENE_INITS — NEW ORDER
-// ══════════════════════════════════════════════
+// Scene init dispatch table — cleaner than if-chain
 const SCENE_INITS={
   1:()=>initS1(), 2:()=>initS2(), 3:()=>initS3(),
   5:()=>initS5(), 6:()=>initS6Rain(), 7:()=>initS7(),
-  8:()=>initS8(), 9:()=>initS9(),
-  10:()=>initSA(),   // sA counter at index 10
-  11:()=>initSB(),   // sB choose  at index 11
-  12:()=>initSC(),   // sC confession at index 12
-  13:()=>initSG(),   // sG special at index 13
-  14:()=>initSD(),   // sD growth  at index 14
-  15:()=>initSE(),   // sE credits at index 15
-  16:()=>initSF()    // sF secret  at index 16
+  8:()=>initS8(), 9:()=>initS9(), 10:()=>initSA(),
+  11:()=>initSB(), 12:()=>initSC(), 13:()=>initSD(),
+  14:()=>initSG(), 15:()=>initSE(), 16:()=>initSF()
 };
 
 function onEnter(n){
@@ -1197,18 +1300,13 @@ function onEnter(n){
 // ══════════════════════════════════════════════
 const canvasInits={};
 function initCanvas(n){
-  const ids={0:'c0',1:'c1',2:'c2',3:'c3',4:'c4',5:'c5',7:'c7',
-             10:'cA',  // sA
-             11:'cB',  // sB
-             13:'cG',  // sG
-             14:'cD',  // sD
-             15:'cE',  // sE
-             16:'cF'}; // sF
+  const ids={0:'c0',1:'c1',2:'c2',3:'c3',4:'c4',5:'c5',7:'c7',10:'cA',11:'cB',13:'cD',14:'cG',15:'cE',16:'cF'};
   if(!ids[n]||canvasInits[n])return;
   canvasInits[n]=true;
   const cv=$(ids[n]);if(!cv)return;
   const ctx=cv.getContext('2d');
   cv.width=window.innerWidth;cv.height=window.innerHeight;
+  // FIX: fewer particles on mobile for better performance
   const count=n===0?(IS_MOBILE?70:150):(IS_MOBILE?35:80);
   const palette=n===0
     ?['rgba(244,114,182,','rgba(251,191,36,','rgba(147,197,253,']
@@ -1219,9 +1317,11 @@ function initCanvas(n){
     dx:(Math.random()-.5)*.25, dy:-Math.random()*.3-.05,
     op:Math.random()*.4+.1, dop:(Math.random()-.5)*.015
   }));
+  // FIX: cache palette index per particle — avoid random() per frame per particle
   pts.forEach(p=>p.ci=Math.floor(Math.random()*palette.length));
+  let rafId=null;
   function draw(){
-    requestAnimationFrame(draw);
+    rafId=requestAnimationFrame(draw);
     ctx.clearRect(0,0,cv.width,cv.height);
     pts.forEach(p=>{
       ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
@@ -1238,7 +1338,7 @@ function initCanvas(n){
 initCanvas(0);
 
 // ══════════════════════════════════════════════
-// SCENE INIT FUNCTIONS
+// SCENE INITS
 // ══════════════════════════════════════════════
 
 function initS1(){
@@ -1296,6 +1396,7 @@ function initS5(){
 
 function initS6Rain(){
   const rain=$('s6Rain');rain.innerHTML='';
+  // FIX: fewer rain drops on mobile
   const dropCount=IS_MOBILE?30:60;
   for(let i=0;i<dropCount;i++){
     const d=document.createElement('div');d.className='rain-drop';
@@ -1321,7 +1422,7 @@ function initS8(){
     el.classList.remove('visible');setTimeout(()=>el.classList.add('visible'),300+i*300);
   });
   setTimeout(()=>$('s8NextBtn').classList.add('show'),300+6*300+400);
-  bindScrollFix($('s8Scroll'));
+  bindScrollFix($('s8Scroll')); // FIX: bind once only
 }
 
 function initS9(){
@@ -1330,7 +1431,7 @@ function initS9(){
   const sign=$('lsign');sign.classList.remove('visible');
   setTimeout(()=>sign.classList.add('visible'),400+paras.length*700);
   setTimeout(()=>$('letterSecretBtn').classList.add('show'),400+(paras.length+1)*700);
-  bindScrollFix($('s9Scroll'));
+  bindScrollFix($('s9Scroll')); // FIX: bind once only
 }
 
 function startCelebration(){
@@ -1372,7 +1473,7 @@ document.addEventListener('touchmove',e=>{
 },{passive:false});
 
 window.addEventListener('resize',()=>{
-  ['c0','c1','c2','c3','c4','c5','c7','cA','cB','cG','cD','cE','cF'].forEach(id=>{
+  ['c0','c1','c2','c3','c4','c5','c7','cA','cB','cD','cG','cE','cF'].forEach(id=>{
     const c=$(id);if(c){c.width=window.innerWidth;c.height=window.innerHeight;}
   });
 });
@@ -1385,7 +1486,7 @@ if(document.readyState==='complete'||document.readyState==='interactive'){
 }
 
 // ══════════════════════════════════════════════
-// COUNTER — sA (index 10)
+// COUNTER (Scene A)
 // ══════════════════════════════════════════════
 const COUPLE_DATE=new Date('2025-04-19T00:00:00');
 let ctrInterval=null,prevCtr={};
@@ -1406,8 +1507,7 @@ function setCN(id,val){
 }
 
 // ══════════════════════════════════════════════
-// SCENE B — choose path (index 11)
-// closeLpResult → goTo(12) = sC confession
+// SCENE B — choose path
 // ══════════════════════════════════════════════
 function initSB(){$('lpResult').classList.remove('show');}
 function choosePath(btn){
@@ -1416,30 +1516,79 @@ function choosePath(btn){
   btn.style.background='rgba(244,114,182,0.08)';
   setTimeout(()=>{$('lpResult').classList.add('show');spawnHearts(8);},400);
 }
-function closeLpResult(){
-  $('lpResult').classList.remove('show');
-  goTo(12); // → sC confession (emotional peak)
-}
+function closeLpResult(){$('lpResult').classList.remove('show');goTo(12);}
 
 // ══════════════════════════════════════════════
-// SCENE C — confession (index 12)
-// Next → goTo(13) = sG special memories
+// SCENE C — confession
 // ══════════════════════════════════════════════
 function initSC(){
   const ps=document.querySelectorAll('.sc-p');
   ps.forEach((p,i)=>{p.classList.remove('visible');setTimeout(()=>p.classList.add('visible'),300+i*500);});
   setTimeout(()=>$('sCNextBtn').classList.add('show'),300+ps.length*500+300);
-  bindScrollFix($('sCScroll'));
+  bindScrollFix($('sCScroll')); // FIX: bind once only
 }
 
-// ══════════════════════════════════════════════
-// SCENE D — growth (index 14)
-// ══════════════════════════════════════════════
 function initSD(){}
 
 // ══════════════════════════════════════════════
-// SCENE G — ช่วงเวลาพิเศษ (index 13)
+// SCENE E — credits
 // ══════════════════════════════════════════════
+function initSE(){
+  const inner=$('creditsInner');
+  inner.style.animation='none';void inner.offsetWidth;
+  inner.style.animation='creditsRoll 28s linear forwards';
+  setTimeout(()=>$('creditsNext').classList.add('show'),26000);
+}
+
+// ══════════════════════════════════════════════
+// SCENE F — secret code input
+// ══════════════════════════════════════════════
+function initSF(){
+  const inp=$('sfInput');
+  inp.value='';inp.classList.remove('err','ok');
+  $('sfLock').classList.remove('unlocked');$('sfLock').textContent='🔒';
+  $('secretLetterOverlay').classList.remove('open');
+  // FIX: autofocus input when entering scene
+  setTimeout(()=>{try{inp.focus();}catch(e){}},400);
+}
+
+function checkSfCode(inp){
+  inp.classList.remove('err','ok');
+  if(inp.value==='19042568'){
+    inp.classList.add('ok');
+    $('sfLock').classList.add('unlocked');$('sfLock').textContent='🔓';
+    vibrate([30,30,80]);
+    // FIX: play letter-open sound effect
+    playToneChime(520,1040,0.6);
+    setTimeout(()=>openSecretLetter(),700);
+  }else if(inp.value.length===8){
+    inp.classList.add('err');
+    vibrate([40,40,40]);
+    setTimeout(()=>{inp.value='';inp.classList.remove('err');},600);
+  }
+}
+
+function openSecretLetter(){
+  const ov=$('secretLetterOverlay');ov.classList.add('open');
+  const ps=ov.querySelectorAll('.sl-p');
+  ps.forEach((p,i)=>{p.classList.remove('visible');setTimeout(()=>p.classList.add('visible'),400+i*650);});
+  const sign=$('slSign');sign.classList.remove('visible');
+  setTimeout(()=>sign.classList.add('visible'),400+ps.length*650);
+  setTimeout(()=>$('slCelebBtn').classList.add('show'),400+(ps.length+1)*650);
+  bindScrollFix(ov); // FIX: bind once only
+}
+
+let _kb='';
+document.addEventListener('keydown',e=>{
+  _kb+=e.key.toLowerCase();if(_kb.length>6)_kb=_kb.slice(-6);
+  if(_kb.includes('piing')){_kb='';openSecretLetter();}
+});
+
+// ══════════════════════════════════════════════
+// SCENE G — ช่วงเวลาพิเศษ
+// ══════════════════════════════════════════════
+
+// FIX: singleton AudioContext for card sounds — no new context per tap
 const _sfxCtx=(()=>{
   let _ac=null;
   return {
@@ -1453,6 +1602,7 @@ const _sfxCtx=(()=>{
   };
 })();
 
+// Reusable tone helper (used for card sounds AND letter-open sound)
 function playToneChime(freqFrom, freqTo, duration, vol=0.07){
   const ac=_sfxCtx.get();if(!ac)return;
   const o=ac.createOscillator(),g=ac.createGain();
@@ -1506,56 +1656,6 @@ function initSG(){
 }
 
 // ══════════════════════════════════════════════
-// SCENE E — credits (index 15)
-// ══════════════════════════════════════════════
-function initSE(){
-  const inner=$('creditsInner');
-  inner.style.animation='none';void inner.offsetWidth;
-  inner.style.animation='creditsRoll 28s linear forwards';
-  setTimeout(()=>$('creditsNext').classList.add('show'),26000);
-}
-
-// ══════════════════════════════════════════════
-// SCENE F — secret code (index 16)
-// ══════════════════════════════════════════════
-function initSF(){
-  const inp=$('sfInput');
-  inp.value='';inp.classList.remove('err','ok');
-  $('sfLock').classList.remove('unlocked');$('sfLock').textContent='🔒';
-  $('secretLetterOverlay').classList.remove('open');
-  setTimeout(()=>{try{inp.focus();}catch(e){}},400);
-}
-
-function checkSfCode(inp){
-  inp.classList.remove('err','ok');
-  if(inp.value==='19042568'){
-    inp.classList.add('ok');
-    $('sfLock').classList.add('unlocked');$('sfLock').textContent='🔓';
-    vibrate([30,30,80]);
-    playToneChime(520,1040,0.6);
-    setTimeout(()=>openSecretLetter(),700);
-  }else if(inp.value.length===8){
-    inp.classList.add('err');
-    vibrate([40,40,40]);
-    setTimeout(()=>{inp.value='';inp.classList.remove('err');},600);
-  }
-}
-
-function openSecretLetter(){
-  const ov=$('secretLetterOverlay');ov.classList.add('open');
-  const ps=ov.querySelectorAll('.sl-p');
-  ps.forEach((p,i)=>{p.classList.remove('visible');setTimeout(()=>p.classList.add('visible'),400+i*650);});
-  const sign=$('slSign');sign.classList.remove('visible');
-  setTimeout(()=>sign.classList.add('visible'),400+ps.length*650);
-  setTimeout(()=>$('slCelebBtn').classList.add('show'),400+(ps.length+1)*650);
-  bindScrollFix(ov);
-}
-
-let _kb='';
-document.addEventListener('keydown',e=>{
-  _kb+=e.key.toLowerCase();if(_kb.length>6)_kb=_kb.slice(-6);
-  if(_kb.includes('piing')){_kb='';openSecretLetter();}
-});
 
 </script>
 </body>
