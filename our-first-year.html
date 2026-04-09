@@ -75,7 +75,7 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
 .s1-line.dim{color:rgba(255,255,255,0.35)}
 
 /* SCENE 2 */
-#s2{background:linear-gradient(160deg,#1a0520 0%,#0d0d1a 50%,#0a1020 100%)}
+#s2{background:linear-gradient(160deg,#1a0520 0%,#0d0d1a 50%,#0a1020 100%);touch-action:pan-y}
 .s2-date-display{font-family:'Cinzel',serif;font-size:clamp(0.7rem,2vw,0.8rem);letter-spacing:0.5em;color:rgba(244,114,182,0.5);margin-bottom:20px}
 .s2-card{background:rgba(255,255,255,0.04);border:1px solid rgba(244,114,182,0.15);border-radius:24px;padding:32px 24px;position:relative;overflow:hidden;cursor:pointer;transition:all 0.4s ease;margin:20px 0}
 .s2-card:active{transform:scale(0.98)}
@@ -536,13 +536,13 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
 </section>
 
 <!-- SCENE 2 -->
-<section class="scene" id="s2">
+<section class="scene" id="s2" style="justify-content:flex-start;padding:0;overflow-y:auto;-webkit-overflow-scrolling:touch">
   <canvas class="bg-canvas" id="c2"></canvas>
-  <div class="box">
+  <div class="box" style="padding:clamp(16px,5vh,40px) 28px clamp(24px,6vh,48px);min-height:100%">
     <p class="s2-date-display">30 มกราคม 2568</p>
     <h2 class="t-title grad-pink" style="margin-bottom:6px">วันแรกที่เจอ Piing</h2>
-    <p class="t-caption" style="color:rgba(255,255,255,0.4);margin-bottom:14px">วันที่เค้ากล้าพอจะเปิดใจให้ใหม่</p>
-    <div id="s2Photos" style="width:100%;max-width:340px;margin:0 auto 16px;border-radius:18px;overflow:hidden;position:relative;aspect-ratio:4/3;box-shadow:0 8px 32px rgba(0,0,0,0.6)">
+    <p class="t-caption" style="color:rgba(255,255,255,0.4);margin-bottom:10px">วันที่เค้ากล้าพอจะเปิดใจให้ใหม่</p>
+    <div id="s2Photos" style="width:100%;max-width:340px;margin:0 auto 12px;border-radius:18px;overflow:hidden;position:relative;aspect-ratio:4/3;box-shadow:0 8px 32px rgba(0,0,0,0.6)">
       <img id="s2Img" src="" alt="" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.9) contrast(1.05)">
       <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,rgba(0,0,0,0.4))"></div>
     </div>
@@ -552,7 +552,7 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
       <p class="s2-card-note">"กล้าลองทำในสิ่งที่ไม่เคยทำ<br>กล้าเดินไปในที่ที่ไม่เคยไป<br>และกล้ายอมรับว่าตัวเองก็อยากมีใครสักคนอยู่ข้างๆ"</p>
       <span class="s2-tap-hint">แตะเพื่อดูเพิ่ม ✨</span>
     </div>
-    <p class="t-caption" style="color:rgba(255,255,255,0.35);margin:12px 0 24px;font-style:italic">จากวันนั้น ทุกอย่างค่อยๆ เริ่มต้นขึ้น<br>อย่างเรียบง่าย</p>
+    <p class="t-caption" style="color:rgba(255,255,255,0.35);margin:8px 0 20px;font-style:italic">จากวันนั้น ทุกอย่างค่อยๆ เริ่มต้นขึ้น<br>อย่างเรียบง่าย</p>
     <button class="btn btn-pink" onclick="goTo(3)">แล้วหัวใจก็เริ่มเปลี่ยนไป →</button>
   </div>
 </section>
@@ -564,13 +564,13 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
   <canvas class="bg-canvas" id="c3" style="opacity:0.2"></canvas>
   <div class="box">
     <p class="s3-official">19 เมษายน 2568</p>
-    <span class="s3-heart-pulse">💛</span>
-    <h1 class="t-display grad-warm" style="margin-bottom:8px">วันเริ่มต้น</h1>
-    <h2 class="t-title" style="font-weight:300;font-size:clamp(1rem,4vw,1.3rem);color:rgba(255,255,255,0.5);margin-bottom:8px">ของเรา</h2>
-    <p class="t-caption" style="color:rgba(255,255,255,0.45);margin-bottom:28px;line-height:1.9">"แค่ได้เรียกเธอว่า 'แฟน'<br>มันก็ทำให้หัวใจอ่อนลงอย่างประหลาด<br>เหมือนโลกที่เคยธรรมดา มีความหมายมากขึ้นทันที"</p>
+    <span class="s3-heart-pulse" style="font-size:clamp(2.5rem,8vw,4rem);margin-bottom:clamp(8px,2vh,16px)">💛</span>
+    <h1 class="t-display grad-warm" style="margin-bottom:4px;font-size:clamp(2rem,9vw,4rem)">วันเริ่มต้น</h1>
+    <h2 class="t-title" style="font-weight:300;font-size:clamp(1rem,4vw,1.3rem);color:rgba(255,255,255,0.5);margin-bottom:clamp(8px,2vh,16px)">ของเรา</h2>
+    <p class="t-caption" style="color:rgba(255,255,255,0.45);margin-bottom:clamp(16px,3vh,28px);line-height:1.9">"แค่ได้เรียกเธอว่า 'แฟน'<br>มันก็ทำให้หัวใจอ่อนลงอย่างประหลาด<br>เหมือนโลกที่เคยธรรมดา มีความหมายมากขึ้นทันที"</p>
     <button class="btn btn-yellow s3-confirm-btn" onclick="confirmCouple()">🎉 &nbsp;เป็นแฟนกันนะ</button>
     <p class="s3-confetti-msg" id="s3msg">ยินดีด้วย! วันนี้ครบ 1 ปีแล้ว 🎊</p>
-    <div id="s3nextWrap" style="margin-top:20px;opacity:0;transition:opacity 0.5s"><button class="btn btn-dark" onclick="goTo(4)">ต่อไป →</button></div>
+    <div id="s3nextWrap" style="margin-top:clamp(12px,2vh,20px);opacity:0;transition:opacity 0.5s"><button class="btn btn-dark" onclick="goTo(4)">ต่อไป →</button></div>
   </div>
 </section>
 
@@ -1467,7 +1467,7 @@ function bigConfetti(){miniConfetti(200);}
 function vibrate(p){if(navigator.vibrate)navigator.vibrate(p);}
 
 document.addEventListener('touchmove',e=>{
-  const sc=['s8Scroll','s9Scroll','sCScroll','secretLetterOverlay'];
+  const sc=['s8Scroll','s9Scroll','sCScroll','secretLetterOverlay','s2'];
   if(sc.some(id=>{const el=$(id);return el&&el.contains(e.target);}))return;
   e.preventDefault();
 },{passive:false});
