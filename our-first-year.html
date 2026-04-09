@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -87,7 +88,8 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
 .s2-tap-hint{font-size:0.7rem;color:rgba(255,255,255,0.2);letter-spacing:0.15em;margin-top:6px}
 
 /* SCENE 3 */
-#s3{background:radial-gradient(ellipse at 50% 30%,#2a1800 0%,#1a1000 40%,#0a0a08 100%);position:relative}
+#s3{background:radial-gradient(ellipse at 50% 30%,#2a1800 0%,#1a1000 40%,#0a0a08 100%);position:relative;isolation:isolate}
+#s3::before{content:'';position:absolute;inset:0;z-index:0;background:rgba(0,0,0,0.6);pointer-events:none}
 .s3-official{font-family:'Cinzel',serif;font-size:clamp(0.65rem,2vw,0.75rem);letter-spacing:0.5em;color:rgba(251,191,36,0.4);margin-bottom:16px}
 .s3-heart-pulse{font-size:4rem;display:block;margin-bottom:16px;animation:pulse 2s ease-in-out infinite}
 .s3-confirm-btn{margin:28px auto 0;display:block}
@@ -559,7 +561,7 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
 
 <!-- SCENE 3 — วีดีโอ Scene 3.mp4 -->
 <section class="scene" id="s3">
-  <video class="scene-video" id="s3Video" src="Scene 3.MOV" muted playsinline preload="auto" loop></video>
+  <video class="scene-video" id="s3Video" src="Scene 3.mp4" muted playsinline preload="auto" loop></video>
   <div class="s3-overlay"></div>
   <canvas class="bg-canvas" id="c3" style="opacity:0.2"></canvas>
   <div class="box">
@@ -1118,9 +1120,7 @@ const ME = (() => {
   const SCENE_MEDIA = {
     0:  { type:'slideshow', speed:2800, mode:'normal', imgs:['mem_01.jpg'] },
     2:  { type:'slideshow', speed:2500, mode:'normal', imgs:['1.jpg','2.jpg','3.jpg'] },
-    3:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
-    4:  { type:'video', mode:'normal', src:'Scene 3.MOV' },
-    14: { type:'video', mode:'normal', src:'special.mp4', fallback:'Scene 3.MOV' },  /* NEW: Scene G */
+    14: { type:'video', mode:'normal', src:'special.mp4', fallback:'Scene 3.mp4' },  /* NEW: Scene G */
   };
   let slotActive='A', slideshowTimer=null, slideIndex=0, currentVideo=null;
   const preloaded={};
