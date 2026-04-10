@@ -608,29 +608,51 @@ canvas.bg-canvas{position:absolute;inset:0;z-index:0}
 </section>
 
 <!-- SCENE 6 -->
-<section class="scene" id="s6">
+<section class="scene" id="s6" style="justify-content:flex-start;padding:0;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y">
   <div class="s6-rain" id="s6Rain"></div>
-  <div class="box" style="margin-bottom:20px">
-    <p class="t-small" style="color:rgba(147,197,253,0.3);margin-bottom:20px">จุดเปลี่ยน</p>
-    <h2 class="t-title" style="color:rgba(255,255,255,0.6);font-weight:300;margin-bottom:24px">คืนที่เกือบไม่มีเรา</h2>
-    <div class="s6-quote">"เราร้องไห้ด้วยกัน<br>โดยไม่มีเสียง<br>ไม่มีใครชนะ<br>และไม่มีใครอยากแพ้"</div>
+  <div class="box" style="padding:clamp(40px,8vh,60px) 28px 0;position:relative;z-index:10">
+    <p class="t-small" style="color:rgba(147,197,253,0.3);margin-bottom:16px">จุดเปลี่ยน</p>
+    <h2 class="t-title" style="color:rgba(255,255,255,0.6);font-weight:300;margin-bottom:28px">คืนที่เกือบไม่มีเรา</h2>
+
+    <div style="text-align:left;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(0.95rem,3.5vw,1.1rem);font-weight:300;color:rgba(255,255,255,0.65);line-height:2;position:relative;z-index:10">
+      <p style="margin-bottom:16px">คืนนั้นมันเงียบมาก ไม่ใช่ความเงียบที่สบายใจ แต่เป็นความเงียบที่หนักจนลมหายใจยังรู้สึกฝืด</p>
+      <p style="margin-bottom:16px">เรานอนอยู่ข้างกัน ไหล่แทบแตะกัน แต่หัวใจกลับเหมือนอยู่คนละฟากโลก ต่างคนต่างมีเหตุผล ต่างคนต่างมีบาดแผล ต่างคนต่างเจ็บ และต่างคนต่างถือ "อีโก้" ไว้แน่น</p>
+      <p style="margin-bottom:16px">คำว่าเลิกไม่ได้ถูกตะโกนออกมาดัง ๆ แต่มันถูกพูดเบา ๆ ซ้ำ ๆ จนเหมือนมันลอยค้างอยู่กลางอากาศระหว่างเรา</p>
+      <p style="margin-bottom:16px">น้ำตาไหลออกมาแบบไม่มีเสียง ไม่มีใครสะอื้น ไม่มีใครหันหน้าหนี เราแค่นอนอยู่ในความมืดเดียวกัน ปล่อยให้น้ำตามันไหลไปพร้อมกับความคิดที่ตีกันอยู่ในหัวใจ</p>
+      <p style="margin-bottom:16px;color:rgba(255,255,255,0.4)">— ตอนนั้นมันมีเพียงสองทางเลือก —</p>
+      <p style="margin-bottom:16px">ทางหนึ่งคือกำอีโก้ไว้ให้แน่น ลุกขึ้นเดินออกไป แล้วปล่อยให้ทุกอย่างกลายเป็นอดีต</p>
+      <p style="margin-bottom:16px">อีกทางคือปล่อยมันลง แม้มันจะฝืน แม้มันจะต้องกลืนศักดิ์ศรีบางอย่าง แล้วเอื้อมมือไปจับกันไว้</p>
+      <p style="margin-bottom:16px">ในความเงียบที่หนักอึ้งนั้น เค้าได้คำตอบ มันไม่ใช่การแพ้ ไม่ใช่การยอม แต่มันคือการเลือก เลือกระหว่างการเป็นคนที่ "ถูก" กับการเป็นคนที่ยังมี <span style="color:rgba(244,114,182,0.85);font-style:normal">"เธอ"</span> อยู่ข้าง ๆ</p>
+      <p style="margin-bottom:16px">และเค้ารู้ชัดเลยว่า การมีเบ้บอยู่ข้างกัน สำคัญกว่าการเอาชนะเสมอ</p>
+      <p style="margin-bottom:32px;color:rgba(251,191,36,0.75)">เพราะถ้าต้องชนะ แต่ไม่มีเธออยู่ตรงนั้น ความชนะนั้นก็ไม่มีความหมายอะไรเลย</p>
+    </div>
   </div>
-  <div class="s6-choice-row">
+  <div class="s6-choice-row" style="position:relative;z-index:10;padding:0 28px 40px;width:100%;max-width:440px;margin:0 auto">
     <button class="s6-choice cold" onclick="choiceScene6()">รักษาอีโก้</button>
     <button class="s6-choice warm" onclick="choiceScene6()">จับมือกันไว้ 🤝</button>
   </div>
 </section>
 
 <!-- SCENE 7 -->
-<section class="scene" id="s7">
+<section class="scene" id="s7" style="justify-content:flex-start;padding:0;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y">
   <div class="s7-dawn-glow" id="s7Glow"></div>
   <canvas class="bg-canvas" id="c7"></canvas>
-  <div class="box">
+  <div class="box" style="padding:clamp(40px,8vh,60px) 28px 48px">
     <span class="s7-hands">🤝</span>
     <p class="t-small" style="color:rgba(251,191,36,0.3);margin-bottom:12px;position:relative;z-index:10">เช้าวันใหม่</p>
-    <h1 class="t-title" style="color:rgba(255,255,255,0.85);font-weight:300;font-size:clamp(1.2rem,5vw,1.6rem);margin-bottom:24px;position:relative;z-index:10">เราเลือกกันอีกครั้ง</h1>
-    <div class="s7-text" id="s7Text">"ไม่ใช่เพราะมันง่าย<br>แต่เพราะเราเลือกแล้วว่า<br>สิ่งที่มีค่ากว่าอีโก้ คือการมีกัน"</div>
-    <div id="s7BtnWrap" style="margin-top:28px;opacity:0;transition:opacity 0.8s;position:relative;z-index:10">
+    <h1 class="t-title" style="color:rgba(255,255,255,0.85);font-weight:300;font-size:clamp(1.2rem,5vw,1.6rem);margin-bottom:28px;position:relative;z-index:10">เราเลือกกันอีกครั้ง</h1>
+
+    <div id="s7Story" style="text-align:left;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(0.95rem,3.5vw,1.1rem);font-weight:300;color:rgba(255,255,255,0.65);line-height:2;position:relative;z-index:10;opacity:0;transition:opacity 1.2s">
+      <p style="margin-bottom:16px">เช้าวันถัดมา แสงอาทิตย์ไม่ได้สว่างกว่าทุกวัน แต่ความรู้สึกมันต่างออกไป</p>
+      <p style="margin-bottom:16px">เราลืมตาขึ้นมาแล้วยังเห็นกันและกันอยู่ข้าง ๆ ไม่มีใครพูดอะไรในทันที แค่หันมามองกัน ตาบวม ๆ แต่สายตามันอ่อนโยนขึ้นกว่าเมื่อคืนมาก</p>
+      <p style="margin-bottom:16px">เราเกือบเสียกันไป แต่เรายังอยู่ตรงนี้</p>
+      <p style="margin-bottom:16px">เค้าเอื้อมมือไปจับมือเธอเบา ๆ ไม่ใช่เพราะกลัวเธอจะหายไป แต่เพราะอยากยืนยันว่า <span style="color:rgba(251,191,36,0.85);font-style:normal">"เรายังเลือกกันอยู่"</span></p>
+      <p style="margin-bottom:16px">ไม่มีคำสัญญายิ่งใหญ่ ไม่มีประโยคสวยหรู มีเพียงคำพูดสั้น ๆ ที่ออกมาจากใจว่า <span style="color:rgba(244,114,182,0.85);font-style:normal">"อยู่ด้วยกันนะ"</span></p>
+      <p style="margin-bottom:16px">คืนนั้นทำให้เราเข้าใจว่า ความรักไม่ใช่การไม่มีปัญหา แต่คือการเลือกกัน แม้ในวันที่มันยากที่สุด</p>
+      <p style="margin-bottom:32px;color:rgba(255,255,255,0.8)">และเช้าวันนั้นเรารู้เลยว่า ความรักของเราไม่ได้อ่อนแอลงเลย ตรงกันข้าม มันกลับ <span style="color:rgba(251,191,36,0.85);font-style:normal">แข็งแรงขึ้น</span> เพราะเราผ่านคืนที่เกือบไม่มีเรา แล้วตื่นขึ้นมา… ยังอยากมีกันและกันอยู่เหมือนเดิม</p>
+    </div>
+
+    <div id="s7BtnWrap" style="margin-top:8px;opacity:0;transition:opacity 0.8s;position:relative;z-index:10">
       <button class="btn btn-yellow" onclick="goTo(8)">ดูการเดินทางของเรา →</button>
     </div>
   </div>
@@ -1408,11 +1430,13 @@ function initS6Rain(){
 function choiceScene6(){vibrate([20,40,20]);goTo(7);}
 
 function initS7(){
-  const text=$('s7Text'),glow=$('s7Glow'),btnWrap=$('s7BtnWrap'),scene=$('s7');
-  text.classList.remove('show');glow.classList.remove('bright');scene.classList.remove('bright');btnWrap.style.opacity='0';
-  setTimeout(()=>text.classList.add('show'),800);
-  setTimeout(()=>{scene.classList.add('bright');glow.classList.add('bright');},1200);
-  setTimeout(()=>{btnWrap.style.opacity='1';},2000);
+  const glow=$('s7Glow'),btnWrap=$('s7BtnWrap'),scene=$('s7');
+  const story=$('s7Story');
+  glow.classList.remove('bright');scene.classList.remove('bright');btnWrap.style.opacity='0';
+  if(story)story.style.opacity='0';
+  setTimeout(()=>{scene.classList.add('bright');glow.classList.add('bright');},800);
+  setTimeout(()=>{if(story)story.style.opacity='1';},1400);
+  setTimeout(()=>{btnWrap.style.opacity='1';},2600);
 }
 
 function initS8(){
@@ -1466,7 +1490,7 @@ function bigConfetti(){miniConfetti(200);}
 function vibrate(p){if(navigator.vibrate)navigator.vibrate(p);}
 
 document.addEventListener('touchmove',e=>{
-  const sc=['s8Scroll','s9Scroll','sCScroll','secretLetterOverlay','s2'];
+  const sc=['s8Scroll','s9Scroll','sCScroll','secretLetterOverlay','s2','s6','s7'];
   if(sc.some(id=>{const el=$(id);return el&&el.contains(e.target);}))return;
   e.preventDefault();
 },{passive:false});
